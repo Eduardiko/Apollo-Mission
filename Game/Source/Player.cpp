@@ -74,8 +74,6 @@ bool Player::Update(float dt)
 		spaceshipRect = { 0,0,17,43 };
 	}
 
-	gravForce = app->physics->GravityForce(*spaceship, *spaceship2);
-
 	spaceship->AddForce(gravForce.x, gravForce.y);
 
 	return true;
@@ -88,6 +86,8 @@ bool Player::PostUpdate()
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
+
+	gravForce = app->physics->GravityForce(*spaceship, *spaceship2);
 
 	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &spaceshipRect);
 	app->render->DrawTexture(spaceshipTex, spaceship2->position.x, spaceship2->position.y, &spaceshipRect);
