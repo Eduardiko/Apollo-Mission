@@ -56,6 +56,8 @@ public:
 		return true;
 	}
 
+	//virtual void OnCollision(CircleCollider* c1, CircleCollider* c2) {};
+
 public:
 
 	SString name;

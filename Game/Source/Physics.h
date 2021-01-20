@@ -3,6 +3,8 @@
 
 #include "Module.h"
 #include "Point.h"
+#include "Collisions.h"
+#include "List.h"
 
 class PhysBody
 {
@@ -10,14 +12,20 @@ public:
 	fPoint position;
 	fPoint velocity;
 	fPoint acceleration;
-	fPoint force;
+	fPoint totalForce;
+	
 	float mass;
 	float angle;
+	
+	List<fPoint> forcesList;
+
+	//CircleCollider* collider;
 
 public: // Methods
 	
 	void AddForce(float forcex, float forcey); // f += df;
 	void AddMomentum(float vx, float vy); // v += dv; // ...why would this not be conceptually correct?
+	//void OnCollision(CircleCollider* c1, CircleCollider* c2);
 
 };
 
@@ -40,12 +48,10 @@ public:
 	~Physics();
 
 	bool Start();
-	bool PreUpdate();
 	bool Update(float dt);
-	bool PostUpdate();
-	bool CleanUp();
 
 	fPoint GravityForce(PhysBody b1, PhysBody b2);
+	fPoint Verlet(PhysBody b, float dt);
 	//fPoint HydroDragForce();
 
 

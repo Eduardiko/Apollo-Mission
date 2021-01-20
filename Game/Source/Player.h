@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Animation.h"
 
 #include "SDL/include/SDL.h"
 
@@ -23,8 +24,12 @@ public:
 	bool CleanUp();
 
 	Spaceship* spaceship;
+	fPoint gravForce;
 
+	Spaceship* spaceship2;
 	fPoint playerPos;
+
+	fPoint playerPos2;
 	SDL_Texture* spaceshipTex;
 	SDL_Rect spaceshipRect;
 

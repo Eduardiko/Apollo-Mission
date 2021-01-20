@@ -30,7 +30,16 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	
+
+	backgroundTex = app->tex->Load("Assets/Textures/background.png");
+
+	for (int i = 0; i < 4; i++)
+	{
+		backgroundAnim.PushBack({ i * 64,0,64,64 });
+	}
+
+	backgroundAnim.loop = true;
+	backgroundAnim.speed = 10.0f;
 
 	return true;
 }
@@ -44,8 +53,9 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	
+	dt = 0.2f;
 
+	backgroundAnim.Update(dt);
 
 	return true;
 }
@@ -53,12 +63,21 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
-	bool ret = true;
 
-	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+		return false;;
 
-	return ret;
+	SDL_Rect rect = backgroundAnim.GetCurrentFrame();
+
+	for (int i = 0; i < 19; i++)
+	{
+		for (int j = 0; j < 11; j++)
+		{
+			app->render->DrawTexture(backgroundTex, i * 64, j * 64, &rect);
+		}
+	}
+
+	return true;
 }
 
 // Called before quitting
@@ -66,5 +85,5 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	return true;
+		return true;
 }

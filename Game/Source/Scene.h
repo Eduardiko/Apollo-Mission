@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Animation.h"
 
 struct SDL_Texture;
 
@@ -33,7 +34,8 @@ public:
 	bool CleanUp();
 
 private:
-
+	SDL_Texture* backgroundTex;
+	Animation backgroundAnim;
 };
 
 #endif // __SCENE_H__
