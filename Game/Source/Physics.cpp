@@ -22,10 +22,10 @@ void PhysBody::AddMomentum(float vx, float vy)
 	velocity.y += vy;
 }
 
-RectangleCollider::RectangleCollider(fPoint min, fPoint max, Type type)
+RectangleCollider::RectangleCollider(float width, float height, Type type)
 {
-	this->min = min;
-	this->max = max;
+	this->width = width;
+	this->height = height;
 	this->type = type;
 }
 
@@ -33,20 +33,11 @@ RectangleCollider* Physics::AddRectangleCollider(int width, int height, Rectangl
 {
 	RectangleCollider* ret = nullptr;
 
-	fPoint min;
-	fPoint max;
-
-	min.x = 0;
-	min.y = height;
-
-	max.x = width;
-	max.y = 0;
-
 	for (uint i = 0; i < 50; ++i)
 	{
 		if (colliderList[i] == nullptr)
 		{
-			ret = colliderList[i] = new RectangleCollider(min,max,type);
+			ret = colliderList[i] = new RectangleCollider(width, height,type);
 			break;
 		}
 	}
@@ -80,7 +71,7 @@ Physics::~Physics()
 bool Physics::Start()
 {
 
-	gravityConstant = 6.674f * pow(10, -11);
+	gravityConstant = 0.5f;
 
 	return true;
 }
@@ -88,6 +79,7 @@ bool Physics::Start()
 
 bool Physics::Update(float dt)
 {
+
 	for (int i = 0; i < app->player->spaceship->forcesList.Count(); i++)
 	{
 		app->player->spaceship->totalForce.x += app->player->spaceship->forcesList[i].x;
@@ -97,6 +89,43 @@ bool Physics::Update(float dt)
 	app->player->spaceship->forcesList.Clear();
 
 	app->player->spaceship->position = Verlet(*app->player->spaceship, dt);
+	
+	RectangleCollider* c1;
+	RectangleCollider* c2;
+
+	for (uint i = 0; i < 50; ++i)
+	{
+		if (colliderList[i] == nullptr)
+			continue;
+
+		c1 = colliderList[i];
+
+		for (uint k = i + 1; k < 50; ++k)
+		{
+			if (colliderList[k] == nullptr)
+				continue;
+
+			c2 = colliderList[k];
+
+			if (detectCollision(c1, c2))
+			{
+				int i = 0;
+			}
+		}
+	}
+
+	return true;
+}
+
+bool Physics::PostUpdate()
+{
+	for (uint i = 0; i < 50; ++i)
+	{
+		if (colliderList[i] == nullptr)
+			continue;
+		SDL_Rect rect = { colliderList[i]->position.x, colliderList[i]->position.y, colliderList[i]->width, colliderList[i]->height };
+		app->render->DrawRectangle(rect, 255, 255, 255, 55, true, true);
+	}
 
 	return true;
 }
@@ -117,8 +146,8 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 
 	angle = asin(distance.y / hypotenuse);
 
-	force.x = i * 0.5 * b1.mass * b2.mass * cos(angle)/ pow(hypotenuse, 2);
-	force.y = -0.5 * b1.mass * b2.mass * sin(angle)/ pow(hypotenuse, 2);
+	force.x = i * gravityConstant * b1.mass * b2.mass * cos(angle)/ pow(hypotenuse, 2);
+	force.y = -gravityConstant * b1.mass * b2.mass * sin(angle)/ pow(hypotenuse, 2);
 
 	return force;
 }
@@ -137,4 +166,30 @@ fPoint Physics::Verlet(PhysBody b, float dt)
 	b.position.y = b.position.y + b.velocity.y * dt + 0.5 * b.acceleration.y * pow(dt, 2);
 
 	return b.position;
+}
+
+bool Physics::detectCollision(RectangleCollider* c1, RectangleCollider* c2)
+{
+	c1->min.x = c1->position.x;
+	c1->min.y = c1->position.y + c1->height;
+	c1->max.x = c1->position.x + c1->width;
+	c1->max.y = c1->position.y;
+
+	c2->min.x = c2->position.x;
+	c2->min.y = c2->position.y + c2->height;
+	c2->max.x = c2->position.x + c2->width;
+	c2->max.y = c2->position.y;
+
+	float d1x = c2->min.x - c1->max.x;
+	float d1y = c2->min.y - c1->max.y;
+	float d2x = c1->min.x - c2->max.x;
+	float d2y = c1->min.y - c2->max.y;
+
+	if (d1x > 0.0f || d1y < 0.0f)
+		return false;
+
+	if (d2x > 0.0f || d2y < 0.0f)
+		return false;
+
+	return true;
 }
