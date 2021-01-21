@@ -37,18 +37,33 @@ public:
 	SDL_Rect spaceshipRect;
 
 	//animations
-	SDL_Rect* currentAnim;
+	Animation* currentAnim;
+	Animation idleAnim;
+	Animation upAnim;
+	Animation leftAnim;
+	Animation rightAnim;
+
 	SDL_Rect idle;
 	SDL_Rect up;
 	SDL_Rect left;
 	SDL_Rect right;
+
+	Animation explosionAnim;
+	SDL_Rect expl_1;
+	SDL_Rect expl_2;
+	SDL_Rect expl_3;
+	SDL_Rect expl_4;
+	SDL_Rect expl_5;
+	SDL_Rect expl_6;
 
 	float propulsionForce;
 	float angleRot;
 	float forceOff;
 	float brakeForce;
 
-	float pi;
+public:
+	bool isAlive;
+	
 };
 
 #endif // __PLAYER_H__

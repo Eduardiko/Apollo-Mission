@@ -28,7 +28,7 @@ bool Player::Awake(pugi::xml_node&)
 bool Player::Start()
 {
 	
-
+	isAlive = true;
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	playerPos = { 100.0f, 300.0f };
 	spaceshipRect = { 0,0,17,43 };
@@ -42,13 +42,32 @@ bool Player::Start()
 	angleRot = 4.0f;
 	brakeForce = propulsionForce / 3;
 
-	
-
 	//animations rects
-	idle=  { 0,0,17,43 };
+	idle = { 0,0,17,43 };
 	up = { 17,0,17,43 };
-	left= { 37,0,19,43 };
-	right= { 65, 0, 19, 43 };
+	left = { 37,0,19,43 };
+	right = { 65, 0, 19, 43 };
+
+	idleAnim.PushBack(idle);
+	idleAnim.loop = false;
+	upAnim.PushBack(up);
+	leftAnim.PushBack(left);
+	rightAnim.PushBack(right);
+	
+	expl_1 = { 99,0,40,60 };
+	expl_2 = { 158,0,40,60 };
+	expl_3 = {228,0,40,60 };
+	expl_4 = { 194,0,40,60 };
+	expl_5 = { 359,0,40,60 };
+	expl_1 = { 425,0,40,60 };
+
+	explosionAnim.PushBack(expl_1);
+	explosionAnim.PushBack(expl_2);
+	explosionAnim.PushBack(expl_3);
+	explosionAnim.PushBack(expl_4);
+	explosionAnim.PushBack(expl_5);
+	explosionAnim.PushBack(expl_6);
+	explosionAnim.loop = false;
 
 	return true;
 }
@@ -60,106 +79,117 @@ bool Player::PreUpdate()
 
 bool Player::Update(float dt)
 {
+	
+
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
 		LOG("Respawning spaceship");
 		Respawn();
 	}
 
-	
-
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	if (!isAlive && currentAnim->HasFinished())
 	{
-		
-		fPoint f = { 0.0f, 0.0f };
-		
-		float angle = ToAngles(spaceship->rotation);
+		isAlive = true;
+	}
 
-
-		if (angle >= 0 && angle <= 90)
+	
+	if (isAlive)
+	{
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		{
-			//LOG("1st quadrant");
-			f.x = abs( (sin(angle) * propulsionForce) );
-			f.y = -abs( (cos(angle) * propulsionForce) );
-			
+
+			fPoint f = { 0.0f, 0.0f };
+
+			float angle = ToAngles(spaceship->rotation);
+
+
+			if (angle >= 0 && angle <= 90)
+			{
+				//LOG("1st quadrant");
+				f.x = abs((sin(angle) * propulsionForce));
+				f.y = -abs((cos(angle) * propulsionForce));
+
+			}
+			if (angle > 90 && angle < 180)
+			{
+				//LOG("2nd quadrant");
+				f.x = abs((sin(angle) * propulsionForce));
+				f.y = abs((cos(angle) * propulsionForce));
+
+			}
+			if (angle > 180 && angle < 270)
+			{
+				//LOG("3rd quadrant");
+				f.x = -abs((sin(angle) * propulsionForce));
+				f.y = abs((cos(angle) * propulsionForce));
+
+			}
+			if (angle > 270 && angle < 360)
+			{
+				//LOG("4th quadrant");
+				f.x = -abs((sin(angle) * propulsionForce));
+				f.y = -abs((cos(angle) * propulsionForce));
+
+			}
+
+			spaceship->AddForce(f.x, f.y);
+
+
+			currentAnim = &upAnim;
+
+
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			{
+
+				spaceship->rotation += angleRot / 40;
+				currentAnim = &rightAnim;
+			}
+
+			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			{
+
+				spaceship->rotation -= angleRot / 40;
+				currentAnim = &leftAnim;
+			}
+
 		}
-		if (angle > 90 && angle < 180)
+
+		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 		{
-			//LOG("2nd quadrant");
-			f.x = abs((sin(angle) * propulsionForce));
-			f.y = abs((cos(angle) * propulsionForce));
+			//LOG("Current force : %f   ,    %f", spaceship->totalForce.x , spaceship->totalForce.y);
+			fPoint f = { 0.0f , 0.0f };
+			float angle = ToAngles(spaceship->rotation);
 
-		}
-		if (angle > 180 && angle < 270)
-		{
-			//LOG("3rd quadrant");
-			f.x = -abs((sin(angle) * propulsionForce));
-			f.y = abs((cos(angle) * propulsionForce));
-
-		}
-		if (angle > 270  && angle < 360)
-		{
-			//LOG("4th quadrant");
-			f.x = -abs((sin(angle) * propulsionForce));
-			f.y = -abs((cos(angle) * propulsionForce));
-
-		}
-		
-		spaceship->AddForce(f.x, f.y);
-		
-		
-		currentAnim = &up;
+			int f_x = spaceship->totalForce.x * brakeForce;
+			int f_y = spaceship->totalForce.y * brakeForce;
 
 
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-
-			spaceship->rotation += angleRot / 40;
-			currentAnim = &right;
+			spaceship->AddForce(-f_x, -f_y);
 		}
 
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 
 			spaceship->rotation -= angleRot / 40;
-			currentAnim = &left;
+			currentAnim = &leftAnim;
 		}
-		
+
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+
+			spaceship->rotation += angleRot / 40;
+			currentAnim = &rightAnim;
+		}
+
+		else
+		{
+			currentAnim = &idleAnim;
+		}
+
+		spaceship->AddForce(gravForce.x, gravForce.y);
 	}
 
-	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-	{
-		//LOG("Current force : %f   ,    %f", spaceship->totalForce.x , spaceship->totalForce.y);
-		fPoint f = { 0.0f , 0.0f };
-		float angle = ToAngles(spaceship->rotation);
-
-		int f_x= spaceship->totalForce.x * brakeForce;
-		int f_y = spaceship->totalForce.y * brakeForce;
-		
-
-		spaceship->AddForce(-f_x, -f_y);
-	}
-
-	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	{
-	
-		spaceship->rotation -= angleRot/40;
-		currentAnim = &left;
-	}
-
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	{
-		
-		spaceship->rotation += angleRot / 40;
-		currentAnim = &right;
-	}
-
-	else
-	{
-		currentAnim = &idle;
-	}
-
-	spaceship->AddForce(gravForce.x, gravForce.y);
+	explosionAnim.Update(dt);
 
 	return true;
 }
@@ -174,7 +204,12 @@ bool Player::PostUpdate()
 
 	//gravForce = app->physics->GravityForce(*spaceship, *spaceship2);
 	//LOG("Rotation : %f", spaceship->rotation);
-	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, currentAnim,1.0f,spaceship->rotation);
+	SDL_Rect rect = currentAnim->GetCurrentFrame();
+	if (currentAnim == &explosionAnim)
+	{
+
+	}
+	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect,1.0f,spaceship->rotation);
 	app->render->DrawTexture(spaceshipTex, spaceship2->position.x, spaceship2->position.y, &spaceshipRect);
 
 	return ret;
@@ -189,11 +224,18 @@ bool Player::CleanUp()
 
 void Player::Respawn()
 {
-	app->audio->PlayFx(app->audio->respawnFx);
-	spaceship->position = playerPos;
-	//Reset forces
-	spaceship->totalForce.x = spaceship->totalForce.y = 0;
-	spaceship->rotation = 0;
+	if (isAlive)
+	{
+		isAlive = false;
+		app->audio->PlayFx(app->audio->respawnFx);
+		spaceship->position = playerPos;
+		//Reset forces
+		spaceship->totalForce.x = spaceship->totalForce.y = 0;
+		spaceship->rotation = 0;
+
+		currentAnim = &explosionAnim;
+
+	}
 }
 
 float Player::ToAngles(float rot)
