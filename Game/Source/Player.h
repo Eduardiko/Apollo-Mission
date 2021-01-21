@@ -42,9 +42,11 @@ public:
 	SDL_Rect left;
 	SDL_Rect right;
 
-
+	float propulsionForce;
 	float angleRot;
 	float forceOff;
+
+	float pi;
 };
 
 #endif // __PLAYER_H__

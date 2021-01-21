@@ -27,6 +27,7 @@ bool Player::Awake(pugi::xml_node&)
 
 bool Player::Start()
 {
+	float pi = 3.1416;
 
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	playerPos = { 100.0f, 300.0f };
@@ -37,8 +38,11 @@ bool Player::Start()
 	playerPos2 = { 500.0f, 400.0f };
 	spaceship2 = new Spaceship(playerPos2, 10.0f, 2, 100.0f,0.0f);
 
-	angleRot = 0.10f;
-	forceOff = 34.0f;
+	propulsionForce = 0.002f;
+	angleRot = 4.0f;
+	forceOff = 14.0f;
+
+	
 
 	//animations rects
 	idle=  { 0,0,17,43 };
@@ -56,38 +60,74 @@ bool Player::PreUpdate()
 
 bool Player::Update(float dt)
 {
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_REPEAT)
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
 		LOG("Respawning spaceship");
 		Respawn();
 	}
 
+	LOG("Rotation : %d", spaceship->rotation);
 
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
-		spaceship->AddForce(0.0f, -0.002f * forceOff);
-		
+		//spaceship->AddForce(0.0f, -propulsionForce * forceOff);
+
+		//spaceship->AddForce((sin(spaceship->rotation)*propulsionForce)*forceOff, -(cos(spaceship->rotation)*propulsionForce) * forceOff);
+		fPoint f = { 0.0f, 0.0f };
+		float rad = spaceship->rotation * pi / 180;
+
+		f.x = (sin(spaceship->rotation) * propulsionForce) * forceOff;
+		f.y= (cos(spaceship->rotation) * propulsionForce) * forceOff;
+
+		//if (rad >= 0 && rad <= 90)
+		//{
+		//	f.x = spaceship->position.x * cos(rad) * propulsionForce;
+		//	f.y = spaceship->position.y * sin(rad) * propulsionForce;
+		//}
+
+		//// second quadrant
+		//if (rad > 90 && rad <= 180)
+		//{
+		//	f.x = spaceship->position.x * cos(rad) * propulsionForce;
+		//	f.y = spaceship->position.y * -sin(rad) * propulsionForce;
+		//}
+
+		//// third quadrant
+		//if (rad > 180 && rad <= 270)
+		//{
+		//	f.x = spaceship->position.x * -cos(rad) * propulsionForce;
+		//	f.y = spaceship->position.y * -sin(rad) * propulsionForce;
+		//}
+
+		//// fourth quadrant
+		//if (rad > 270 && rad <= 360)
+		//{
+		//	f.x = spaceship->position.x * -cos(rad) * propulsionForce;
+		//	f.y = spaceship->position.y * sin(rad) * propulsionForce;
+		//}
+
+		spaceship->AddForce(f.x, f.y);
 		currentAnim = &up;
 		
 	}
 	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		spaceship->AddForce(-0.002f * forceOff, 0.0f);
+		//spaceship->AddForce(-propulsionForce * forceOff, 0.0f);
 	
-		spaceship->rotation -= angleRot;
+		spaceship->rotation -= angleRot/40;
 		currentAnim = &left;
 	}
 	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
-		spaceship->AddForce(0.0f, 0.002f * forceOff);
+		spaceship->AddForce(0.0f, propulsionForce * forceOff);
 	
 		currentAnim = &idle;
 	}
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
-		spaceship->AddForce(0.002f * forceOff, 0.0f);
+		//spaceship->AddForce(propulsionForce * forceOff, 0.0f);
 		
-		spaceship->rotation += angleRot;
+		spaceship->rotation += angleRot/40;
 		currentAnim = &right;
 	}
 	else
