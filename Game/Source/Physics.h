@@ -19,9 +19,11 @@ struct RectangleCollider
 	fPoint position;
 	fPoint min;
 	fPoint max;
+	float width;
+	float height;
 	Type type;
 
-	RectangleCollider(fPoint min, fPoint max, Type type);
+	RectangleCollider(float width, float height, Type type);
 	void SetColliderPos(fPoint position);
 };
 
@@ -38,6 +40,7 @@ public:
 	
 	List<fPoint> forcesList;
 
+	RectangleCollider* collider;
 	
 public: // Methods
 	
@@ -50,7 +53,7 @@ class Spaceship : public PhysBody
 public: // Properties
 	int health; // Spaceship's hull structural integrity. You could also add another variable for energy shields.
 	float fuel; // Could also be an integer, if you do not need too much precision.
-	int ammo; // Number of remaining torpedoes. The method launchTorpedo() reduces this by 1.
+	
 
 public: // Methods
 	Spaceship(fPoint position, float mass, int health, float fuel,float rotation);
@@ -73,6 +76,7 @@ public:
 
 	bool Start();
 	bool Update(float dt);
+	bool PostUpdate();
 
 	fPoint GravityForce(PhysBody b1, PhysBody b2);
 	fPoint Verlet(PhysBody b, float dt);
@@ -81,7 +85,7 @@ public:
 
 	RectangleCollider* colliderList[50] = { nullptr };
 	RectangleCollider* AddRectangleCollider(int width, int height, RectangleCollider::Type type);
-	//void detectCollision(PhysBody b1, PhysBody b2);
+	bool detectCollision(RectangleCollider* c1, RectangleCollider* c2);
 	//void solveCollision();
 
 
