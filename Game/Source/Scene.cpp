@@ -63,10 +63,13 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
-
+	
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		return false;;
+	{
+		LOG("Background parallax (?)");
+		return false;
 
+	}
 	SDL_Rect rect = backgroundAnim.GetCurrentFrame();
 
 	for (int i = 0; i < 19; i++)

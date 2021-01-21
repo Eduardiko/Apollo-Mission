@@ -22,12 +22,13 @@ void PhysBody::AddMomentum(float vx, float vy)
 	velocity.y += vy;
 }
 
-Spaceship::Spaceship(fPoint position, float mass, int health, float fuel)
+Spaceship::Spaceship(fPoint position, float mass, int health, float fuel,float rotation)
 {
 	this->position = position;
 	this->mass = mass;
 	this->health = health;
 	this->fuel = fuel;
+	this->rotation = rotation;
 }
 
 Physics::Physics() : Module()

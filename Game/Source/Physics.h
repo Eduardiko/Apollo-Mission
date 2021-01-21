@@ -15,7 +15,7 @@ public:
 	fPoint totalForce;
 	
 	float mass;
-	float angle;
+	float rotation;
 	
 	List<fPoint> forcesList;
 
@@ -37,7 +37,7 @@ public: // Properties
 	int ammo; // Number of remaining torpedoes. The method launchTorpedo() reduces this by 1.
 
 public: // Methods
-	Spaceship(fPoint position, float mass, int health, float fuel);
+	Spaceship(fPoint position, float mass, int health, float fuel,float rotation);
 };
 
 // Module --------------------------------------

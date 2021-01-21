@@ -23,6 +23,8 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
+	void Respawn();
+
 	Spaceship* spaceship;
 	fPoint gravForce;
 
@@ -33,6 +35,16 @@ public:
 	SDL_Texture* spaceshipTex;
 	SDL_Rect spaceshipRect;
 
+	//animations
+	SDL_Rect* currentAnim;
+	SDL_Rect idle;
+	SDL_Rect up;
+	SDL_Rect left;
+	SDL_Rect right;
+
+
+	float angleRot;
+	float forceOff;
 };
 
 #endif // __PLAYER_H__
