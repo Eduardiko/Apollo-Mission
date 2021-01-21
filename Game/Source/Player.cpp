@@ -57,7 +57,7 @@ bool Player::Update(float dt)
 	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
 		spaceship->AddForce(-0.002f, 0.0f);
-		spaceshipRect = { 17,0,17,43 };
+		spaceshipRect = { 37,0,19,43 };
 	}
 	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
@@ -67,7 +67,7 @@ bool Player::Update(float dt)
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
 		spaceship->AddForce(0.002f, 0.0f);
-		spaceshipRect = { 17,0,17,43 };
+		spaceshipRect = { 65,0,19,43 };
 	}
 	else
 	{
