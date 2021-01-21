@@ -67,27 +67,20 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 {
 	fPoint force;
 	fPoint distance;
+	float hypotenuse;
+	float angle;
+	int i;
 
 	distance.x = b1.position.x - b2.position.x;
+	if (distance.x <= 0) i = 1;
+	else if (distance.x > 0) i = -1;
 	distance.y = b1.position.y - b2.position.y;
+	hypotenuse = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 
-	int i, j;
-	if (distance.x < 0) i = 1;
-	else i = -1;
+	angle = asin(distance.y / hypotenuse);
 
-	if (distance.y < 0)
-	{
-		j = 1;
-	}
-	else j = -1;
-
-	force.x = 0.01 * b1.mass * b2.mass * i / pow(distance.x, 2);
-	force.y = 0.01 * b1.mass * b2.mass * j / pow(distance.y, 2);
-
-	if (distance.x == 0) 
-		force.x = 0;
-	if (distance.y == 0) 
-		force.y = 0;
+	force.x = i * 0.5 * b1.mass * b2.mass * cos(angle)/ pow(hypotenuse, 2);
+	force.y = -0.5 * b1.mass * b2.mass * sin(angle)/ pow(hypotenuse, 2);
 
 	return force;
 }
