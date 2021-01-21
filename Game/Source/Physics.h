@@ -6,6 +6,25 @@
 #include "Collisions.h"
 #include "List.h"
 
+
+struct RectangleCollider
+{
+	enum Type
+	{
+		SPACESHIP,
+		ASTEROID,
+		PLANET
+	};
+
+	fPoint position;
+	fPoint min;
+	fPoint max;
+	Type type;
+
+	RectangleCollider(fPoint min, fPoint max, Type type);
+	void SetColliderPos(fPoint position);
+};
+
 class PhysBody
 {
 public:
@@ -19,14 +38,11 @@ public:
 	
 	List<fPoint> forcesList;
 
-	//CircleCollider* collider;
-
+	
 public: // Methods
 	
 	void AddForce(float forcex, float forcey); // f += df;
 	void AddMomentum(float vx, float vy); // v += dv; // ...why would this not be conceptually correct?
-	//void OnCollision(CircleCollider* c1, CircleCollider* c2);
-
 };
 
 class Spaceship : public PhysBody
@@ -39,6 +55,14 @@ public: // Properties
 public: // Methods
 	Spaceship(fPoint position, float mass, int health, float fuel,float rotation);
 };
+
+class Planet : public PhysBody
+{
+public:
+	float radius;
+
+};
+
 
 // Module --------------------------------------
 class Physics : public Module
@@ -55,6 +79,8 @@ public:
 	//fPoint HydroDragForce();
 
 
+	RectangleCollider* colliderList[50] = { nullptr };
+	RectangleCollider* AddRectangleCollider(int width, int height, RectangleCollider::Type type);
 	//void detectCollision(PhysBody b1, PhysBody b2);
 	//void solveCollision();
 
