@@ -7,6 +7,8 @@
 
 class App;
 
+struct RectangleCollider;
+
 class Module
 {
 public:

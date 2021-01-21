@@ -22,6 +22,43 @@ void PhysBody::AddMomentum(float vx, float vy)
 	velocity.y += vy;
 }
 
+RectangleCollider::RectangleCollider(fPoint min, fPoint max, Type type)
+{
+	this->min = min;
+	this->max = max;
+	this->type = type;
+}
+
+RectangleCollider* Physics::AddRectangleCollider(int width, int height, RectangleCollider::Type type)
+{
+	RectangleCollider* ret = nullptr;
+
+	fPoint min;
+	fPoint max;
+
+	min.x = 0;
+	min.y = height;
+
+	max.x = width;
+	max.y = 0;
+
+	for (uint i = 0; i < 50; ++i)
+	{
+		if (colliderList[i] == nullptr)
+		{
+			ret = colliderList[i] = new RectangleCollider(min,max,type);
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void RectangleCollider::SetColliderPos(fPoint position)
+{
+	this->position = position;
+}
+
 Spaceship::Spaceship(fPoint position, float mass, int health, float fuel,float rotation)
 {
 	this->position = position;
