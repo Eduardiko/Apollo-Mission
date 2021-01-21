@@ -109,6 +109,21 @@ bool Player::Update(float dt)
 		
 		
 		currentAnim = &up;
+
+
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+
+			spaceship->rotation += angleRot / 40;
+			currentAnim = &right;
+		}
+
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+
+			spaceship->rotation -= angleRot / 40;
+			currentAnim = &left;
+		}
 		
 	}
 
@@ -138,6 +153,7 @@ bool Player::Update(float dt)
 		spaceship->rotation += angleRot / 40;
 		currentAnim = &right;
 	}
+
 	else
 	{
 		currentAnim = &idle;
