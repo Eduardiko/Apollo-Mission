@@ -36,6 +36,12 @@ public:
 private:
 	SDL_Texture* backgroundTex;
 	Animation backgroundAnim;
+
+public:
+	//planets rects
+	SDL_Texture* planets;
+	SDL_Rect moon;
+	SDL_Rect cheesePlanet;
 };
 
 #endif // __SCENE_H__

@@ -36,6 +36,11 @@ private:
 
 	_Mix_Music* music;
 	List<Mix_Chunk *>	fx;
+public:
+	int respawnFx;
+	int jetFx;
+	int radioFx;
+	int explosionFx;
 };
 
 #endif // __AUDIO_H__

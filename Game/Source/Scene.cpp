@@ -41,6 +41,14 @@ bool Scene::Start()
 	backgroundAnim.loop = true;
 	backgroundAnim.speed = 10.0f;
 
+
+	app->audio->explosionFx = app->audio->LoadFx("Assets/Audio/Fx/explosionFx.wav");
+	app->audio->respawnFx = app->audio->LoadFx("Assets/Audio/Fx/respawnFx.wav");
+	app->audio->radioFx = app->audio->LoadFx("Assets/Audio/Fx/radioFx.wav");
+	app->audio->jetFx = app->audio->LoadFx("Assets/Audio/Fx/jetFx.wav");
+
+
+	app->audio->PlayFx(app->audio->respawnFx);
 	return true;
 }
 

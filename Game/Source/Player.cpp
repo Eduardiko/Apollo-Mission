@@ -129,7 +129,7 @@ bool Player::Update(float dt)
 
 	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
-		LOG("Current force : %f   ,    %f", spaceship->totalForce.x , spaceship->totalForce.y);
+		//LOG("Current force : %f   ,    %f", spaceship->totalForce.x , spaceship->totalForce.y);
 		fPoint f = { 0.0f , 0.0f };
 		float angle = ToAngles(spaceship->rotation);
 
@@ -189,6 +189,7 @@ bool Player::CleanUp()
 
 void Player::Respawn()
 {
+	app->audio->PlayFx(app->audio->respawnFx);
 	spaceship->position = playerPos;
 	//Reset forces
 	spaceship->totalForce.x = spaceship->totalForce.y = 0;
