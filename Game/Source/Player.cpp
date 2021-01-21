@@ -27,7 +27,7 @@ bool Player::Awake(pugi::xml_node&)
 
 bool Player::Start()
 {
-	float pi = 3.1416;
+	
 
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	playerPos = { 100.0f, 300.0f };
@@ -38,9 +38,9 @@ bool Player::Start()
 	playerPos2 = { 500.0f, 400.0f };
 	spaceship2 = new Spaceship(playerPos2, 10.0f, 2, 100.0f,0.0f);
 
-	propulsionForce = 0.002f;
+	propulsionForce = 0.002f*5;
 	angleRot = 4.0f;
-	forceOff = 14.0f;
+	brakeForce = propulsionForce / 3;
 
 	
 
@@ -66,68 +66,76 @@ bool Player::Update(float dt)
 		Respawn();
 	}
 
-	LOG("Rotation : %d", spaceship->rotation);
+	
 
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
-		//spaceship->AddForce(0.0f, -propulsionForce * forceOff);
-
-		//spaceship->AddForce((sin(spaceship->rotation)*propulsionForce)*forceOff, -(cos(spaceship->rotation)*propulsionForce) * forceOff);
+		
 		fPoint f = { 0.0f, 0.0f };
-		float rad = spaceship->rotation * pi / 180;
+		
+		float angle = ToAngles(spaceship->rotation);
 
-		f.x = (sin(spaceship->rotation) * propulsionForce) * forceOff;
-		f.y= (cos(spaceship->rotation) * propulsionForce) * forceOff;
 
-		//if (rad >= 0 && rad <= 90)
-		//{
-		//	f.x = spaceship->position.x * cos(rad) * propulsionForce;
-		//	f.y = spaceship->position.y * sin(rad) * propulsionForce;
-		//}
+		if (angle >= 0 && angle <= 90)
+		{
+			//LOG("1st quadrant");
+			f.x = abs( (sin(angle) * propulsionForce) );
+			f.y = -abs( (cos(angle) * propulsionForce) );
+			
+		}
+		if (angle > 90 && angle < 180)
+		{
+			//LOG("2nd quadrant");
+			f.x = abs((sin(angle) * propulsionForce));
+			f.y = abs((cos(angle) * propulsionForce));
 
-		//// second quadrant
-		//if (rad > 90 && rad <= 180)
-		//{
-		//	f.x = spaceship->position.x * cos(rad) * propulsionForce;
-		//	f.y = spaceship->position.y * -sin(rad) * propulsionForce;
-		//}
+		}
+		if (angle > 180 && angle < 270)
+		{
+			//LOG("3rd quadrant");
+			f.x = -abs((sin(angle) * propulsionForce));
+			f.y = abs((cos(angle) * propulsionForce));
 
-		//// third quadrant
-		//if (rad > 180 && rad <= 270)
-		//{
-		//	f.x = spaceship->position.x * -cos(rad) * propulsionForce;
-		//	f.y = spaceship->position.y * -sin(rad) * propulsionForce;
-		//}
+		}
+		if (angle > 270  && angle < 360)
+		{
+			//LOG("4th quadrant");
+			f.x = -abs((sin(angle) * propulsionForce));
+			f.y = -abs((cos(angle) * propulsionForce));
 
-		//// fourth quadrant
-		//if (rad > 270 && rad <= 360)
-		//{
-		//	f.x = spaceship->position.x * -cos(rad) * propulsionForce;
-		//	f.y = spaceship->position.y * sin(rad) * propulsionForce;
-		//}
-
+		}
+		
 		spaceship->AddForce(f.x, f.y);
+		
+		
 		currentAnim = &up;
 		
 	}
+
+	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		LOG("Current force : %f   ,    %f", spaceship->totalForce.x , spaceship->totalForce.y);
+		fPoint f = { 0.0f , 0.0f };
+		float angle = ToAngles(spaceship->rotation);
+
+		int f_x= spaceship->totalForce.x * brakeForce;
+		int f_y = spaceship->totalForce.y * brakeForce;
+		
+
+		spaceship->AddForce(-f_x, -f_y);
+	}
+
 	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		//spaceship->AddForce(-propulsionForce * forceOff, 0.0f);
 	
 		spaceship->rotation -= angleRot/40;
 		currentAnim = &left;
 	}
-	else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-	{
-		spaceship->AddForce(0.0f, propulsionForce * forceOff);
-	
-		currentAnim = &idle;
-	}
+
 	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
-		//spaceship->AddForce(propulsionForce * forceOff, 0.0f);
 		
-		spaceship->rotation += angleRot/40;
+		spaceship->rotation += angleRot / 40;
 		currentAnim = &right;
 	}
 	else
@@ -148,8 +156,8 @@ bool Player::PostUpdate()
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
-	gravForce = app->physics->GravityForce(*spaceship, *spaceship2);
-
+	//gravForce = app->physics->GravityForce(*spaceship, *spaceship2);
+	//LOG("Rotation : %f", spaceship->rotation);
 	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, currentAnim,1.0f,spaceship->rotation);
 	app->render->DrawTexture(spaceshipTex, spaceship2->position.x, spaceship2->position.y, &spaceshipRect);
 
@@ -169,4 +177,18 @@ void Player::Respawn()
 	//Reset forces
 	spaceship->totalForce.x = spaceship->totalForce.y = 0;
 	spaceship->rotation = 0;
+}
+
+float Player::ToAngles(float rot)
+{
+	int degrees = rot;
+	
+	 degrees = degrees % 360;
+
+	 if (degrees < 0)
+	 {
+		 degrees += 360;
+	 }
+
+	 return degrees;
 }

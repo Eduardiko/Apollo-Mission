@@ -24,6 +24,7 @@ public:
 	bool CleanUp();
 
 	void Respawn();
+	float ToAngles(float rot);
 
 	Spaceship* spaceship;
 	fPoint gravForce;
@@ -45,6 +46,7 @@ public:
 	float propulsionForce;
 	float angleRot;
 	float forceOff;
+	float brakeForce;
 
 	float pi;
 };
