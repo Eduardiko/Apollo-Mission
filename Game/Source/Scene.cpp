@@ -35,21 +35,25 @@ bool Scene::Start()
 	planetsTex = app->tex->Load("Assets/Textures/planets.png");
 	
 	
-	earth1 = { 117 , 0 , 96 , 96 };
-	earth2= { 227 , 0 , 96 , 96 };
-	earth3 = { 336 , 0 , 96 , 96 };
-	earth4 = { 458 , 0 , 96 , 96 };
-	
-	earthAnim.PushBack(earth1);
-	earthAnim.PushBack(earth2);
-	earthAnim.PushBack(earth3);
-	earthAnim.PushBack(earth4);
-
-	mars = { 359 ,232,90,90 };
-
+	earthRect = { 117 , 0 , 96 , 96 };
+	whitePlanetRect = { 336 , 0 , 96 , 96 };
+	marsRect = { 359 ,232, 72, 72 };
 	moonRect = { 108 , 253,30,30 };
-	moonPos = { 300.0f,300.0f };
-	moon = new Planet(moonPos, 5.0f, 50);
+
+	earthiPos = { 300.0f, 300.0f };
+	earth = new Planet(earthiPos, 30.0f, 100.0f);
+	earth->collider = app->physics->AddRectangleCollider(96, 96, RectangleCollider::Type::PLANET);
+	planetList.Add(*earth);
+
+	marsiPos = { 700.0f, 600.0f };
+	mars = new Planet(marsiPos, 20.0f, 70.0f);
+	mars->collider = app->physics->AddRectangleCollider(72, 72, RectangleCollider::Type::PLANET);
+	planetList.Add(*mars);
+
+	mooniPos = { 300.0f,300.0f };
+	moon = new Planet(mooniPos, 5.0f, 50.0f);
+	moon->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::PLANET);
+	planetList.Add(*moon);
 	moon->orbitalSpeed = 0.0f;
 
 	for (int i = 0; i < 4; i++)
@@ -66,8 +70,6 @@ bool Scene::Start()
 	app->audio->radioFx = app->audio->LoadFx("Assets/Audio/Fx/radioFx.wav");
 	app->audio->jetFx = app->audio->LoadFx("Assets/Audio/Fx/jetFx.wav");
 
-
-	app->audio->PlayFx(app->audio->respawnFx);
 	return true;
 }
 
@@ -83,9 +85,11 @@ bool Scene::Update(float dt)
 
 	backgroundAnim.Update(dt);
 
-	earthAnim.Update(0.012f/20);
+	moon->position = CircularMotion(300, 300, 110, dt);
 
-	moonPos = CircularMotion(300, 300, 110, dt);
+	earth->collider->SetColliderPos(earth->position);
+	mars->collider->SetColliderPos(mars->position);
+	moon->collider->SetColliderPos(moon->position);
 
 	return true;
 }
@@ -96,7 +100,7 @@ bool Scene::PostUpdate()
 	
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 	{
-		//LOG("Background parallax (?)");
+
 		return false;
 
 	}
@@ -110,13 +114,12 @@ bool Scene::PostUpdate()
 		}
 	}
 
-	//earth
-	SDL_Rect _rect = earthAnim.GetCurrentFrame();
-	app->render->DrawTexture(planetsTex, 300, 300, &_rect, 0.1f);
-	//mars
-	app->render->DrawTexture(planetsTex, 700, 600, &mars);
+	app->render->DrawTexture(planetsTex, earth->position.x, earth->position.x, &earthRect, 0.1f);
+	app->render->DrawTexture(planetsTex, mars->position.x, mars->position.y, &marsRect);
+	app->render->DrawTexture(planetsTex, moon->position.x, moon->position.y, &moonRect);
 	
-	app->render->DrawTexture(planetsTex, moonPos.x, moonPos.y, &moonRect);
+	DrawRadius();
+
 	return true;
 }
 
@@ -130,7 +133,7 @@ bool Scene::CleanUp()
 
 fPoint Scene::CircularMotion(float x, float y, float radius,float dt)
 {
-	float s = 1.0f/500;
+	float s = 0.5f;
 	moon->orbitalSpeed += dt*s;
 
 	fPoint p = { 0.0f , 0.0f };
@@ -139,4 +142,13 @@ fPoint Scene::CircularMotion(float x, float y, float radius,float dt)
 	p.y = (y+48) + sin(moon->orbitalSpeed) * radius;
 
 	return p;
+}
+
+void Scene::DrawRadius()
+{
+
+	for (int i = 0; i < planetList.Count(); i++)
+	{
+		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].atmosphereRadius, 255, 255, 255, 50);
+	}
 }

@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Point.h"
-#include "Collisions.h"
 #include "List.h"
 
 
@@ -21,6 +20,7 @@ struct RectangleCollider
 	fPoint max;
 	float width;
 	float height;
+	fPoint center;
 	Type type;
 
 	RectangleCollider(float width, float height, Type type);
@@ -37,6 +37,7 @@ public:
 	
 	float mass;
 	float rotation;
+	float atmosphereRadius;
 	
 	List<fPoint> forcesList;
 
@@ -62,8 +63,6 @@ public: // Methods
 class Planet : public PhysBody
 {
 public:
-	float atmosphereRadius;
-	fPoint center;
 	float orbitalSpeed;
 
 public:
@@ -89,8 +88,8 @@ public:
 
 	RectangleCollider* colliderList[50] = { nullptr };
 	RectangleCollider* AddRectangleCollider(int width, int height, RectangleCollider::Type type);
-	bool detectCollision(RectangleCollider* c1, RectangleCollider* c2);
-	void solveCollision(RectangleCollider* c1, RectangleCollider* c2);
+	bool DetectCollision(RectangleCollider* c1, RectangleCollider* c2);
+	void SolveCollision(RectangleCollider* c1, RectangleCollider* c2);
 
 	int direction;
 

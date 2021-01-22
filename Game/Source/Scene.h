@@ -6,6 +6,7 @@
 #include "Physics.h"
 
 struct SDL_Texture;
+class Planet;
 
 class Scene : public Module
 {
@@ -35,6 +36,7 @@ public:
 	bool CleanUp();
 
 	fPoint CircularMotion(float x, float y, float radius,float dt);
+	void DrawRadius();
 
 private:
 	SDL_Texture* backgroundTex;
@@ -42,20 +44,22 @@ private:
 
 public:
 	//planets rects
+	List<PhysBody> planetList;
 	SDL_Texture* planetsTex;
 
-	Animation earthAnim;
-	SDL_Rect earth1;
-	SDL_Rect earth2;
-	SDL_Rect earth3;
-	SDL_Rect earth4;
-
-	SDL_Rect mars;
-
-	Planet* moon;
+	SDL_Rect earthRect;
+	SDL_Rect whitePlanetRect;
+	SDL_Rect marsRect;
 	SDL_Rect moonRect;
-	fPoint moonPos;
-	SDL_Rect cheesePlanet;
+
+	Planet* earth;
+	Planet* mars;
+	Planet* whitePlanet;
+	Planet* moon;
+	
+	fPoint earthiPos;
+	fPoint marsiPos;
+	fPoint mooniPos;
 	
 };
 

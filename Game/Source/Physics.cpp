@@ -94,9 +94,7 @@ bool Physics::Update(float dt)
 	}
 
 	app->player->spaceship->forcesList.Clear();
-
-	app->player->spaceship->position = Verlet(*app->player->spaceship, dt);
-	
+		
 	RectangleCollider* c1;
 	RectangleCollider* c2;
 
@@ -106,6 +104,8 @@ bool Physics::Update(float dt)
 			continue;
 
 		c1 = colliderList[i];
+		c1->center.x = c1->position.x + c1->width / 2;
+		c1->center.y = c1->position.y + c1->height / 2;
 
 		for (uint k = i + 1; k < 50; ++k)
 		{
@@ -113,10 +113,14 @@ bool Physics::Update(float dt)
 				continue;
 
 			c2 = colliderList[k];
+			c2->center.x = c2->position.x + c2->width / 2;
+			c2->center.y = c2->position.y + c2->height / 2;
 
-			if (detectCollision(c1, c2)) solveCollision(c1, c2);
+			if(DetectCollision(c1, c2)) SolveCollision(c1, c2);
 		}
 	}
+
+	app->player->spaceship->position = Verlet(*app->player->spaceship, dt);
 
 	return true;
 }
@@ -141,15 +145,11 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 	float hypotenuse;
 	float angle;
 	int i;
-	fPoint center;
 
-	center.x = b2.position.x + b2.collider->width / 2;
-	center.y = b2.position.y + b2.collider->height / 2;
-
-	distance.x = b1.position.x - center.x;
+	distance.x = b1.collider->center.x - b2.collider->center.x;
 	if (distance.x <= 0) i = 1;
 	else if (distance.x > 0) i = -1;
-	distance.y = b1.position.y - center.y;
+	distance.y = b1.collider->center.y - b2.collider->center.y;
 	hypotenuse = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 
 	angle = asin(distance.y / hypotenuse);
@@ -162,10 +162,7 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 
 fPoint Physics::Verlet(PhysBody b, float dt)
 {
-
-	//if (b.totalForce.x > 50.0f) b.totalForce.x = 50.0f;
-	//if (b.totalForce.y > 50.0f) b.totalForce.y = 50.0f;
-
+	
 	b.acceleration.x = b.totalForce.x / b.mass;
 	b.acceleration.y = b.totalForce.y / b.mass;
 
@@ -178,9 +175,18 @@ fPoint Physics::Verlet(PhysBody b, float dt)
 	return b.position;
 }
 
-bool Physics::detectCollision(RectangleCollider* c1, RectangleCollider* c2)
+bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
-	if (c1->type != RectangleCollider::Type::SPACESHIP) return false;
+	RectangleCollider* holdC;
+
+	if (c2->type == RectangleCollider::Type::PLANET && c1->type == RectangleCollider::Type::PLANET) return false;
+
+	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::PLANET)
+	{
+		holdC = c2;
+		c2 = c1;
+		c1 = holdC;
+	}
 
 	c1->min.x = c1->position.x;
 	c1->min.y = c1->position.y + c1->height;
@@ -203,20 +209,36 @@ bool Physics::detectCollision(RectangleCollider* c1, RectangleCollider* c2)
 	if (d2x > 0.0f || d2y < 0.0f)
 		return false;
 
-	if (d2y > -1 && d2y < 1) direction = 1;
-	if (d1y > -1 && d1y < 1) direction = 2;
-	if (d1x > -1 && d1x < 1) direction = 3;
-	if (d2x > -1 && d2x < 1) direction = 4;
+	if (d2y > -3 && d2y < 3) direction = 1;
+	if (d1y > -3 && d1y < 3) direction = 2;
+	if (d1x > -3 && d1x < 3) direction = 3;
+	if (d2x > -3 && d2x < 3) direction = 4;
 
 	return true;
 }
 
-void Physics::solveCollision(RectangleCollider* c1, RectangleCollider* c2)
+void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
 	int subs = 1;
 
-	if (direction == 1)	app->player->spaceship->position.y -= subs;
-	if (direction == 2)	app->player->spaceship->position.y += subs;
-	if (direction == 3)	app->player->spaceship->position.x -= subs;
-	if (direction == 4)	app->player->spaceship->position.x += subs;
+	if (direction == 1)
+	{
+		app->player->spaceship->position.y -= subs;
+		app->player->spaceship->totalForce.y *= -0.2f;
+	}
+	if (direction == 2)
+	{
+		app->player->spaceship->position.y += subs;
+		app->player->spaceship->totalForce.y *= -0.2f;
+	}
+	if (direction == 3)
+	{
+		app->player->spaceship->position.x -= subs;
+		app->player->spaceship->totalForce.x *= -0.2f;
+	}
+	if (direction == 4)
+	{
+		app->player->spaceship->position.x += subs;
+		app->player->spaceship->totalForce.x *= -0.2f;
+	}
 }

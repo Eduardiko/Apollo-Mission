@@ -37,9 +37,11 @@ bool Player::Start()
 	spaceship = new Spaceship(playerPos, 10.0f, 2, 100.0f,0.0f);
 	spaceship->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::SPACESHIP);
 
-	propulsionForce = 100.0f;
+	propulsionForce = 1500.0f;
 	angleRot = 4.0f;
-	brakeForce = propulsionForce / 3;
+
+	gravForce.x = 0.0f;
+	gravForce.y = 0.0f;
 
 	//animations rects
 	idle = { 0,0,17,43 };
@@ -141,7 +143,7 @@ bool Player::Update(float dt)
 
 			}
 
-			spaceship->AddForce(0.0f, -1500.0f);
+			spaceship->AddForce(f.x, f.y);
 
 
 			currentAnim = &upAnim;
@@ -150,14 +152,14 @@ bool Player::Update(float dt)
 			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 			{
 
-				spaceship->rotation += angleRot / 40;
+				spaceship->rotation += angleRot;
 				currentAnim = &rightAnim;
 			}
 
 			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 			{
 
-				spaceship->rotation -= angleRot / 40;
+				spaceship->rotation -= angleRot;
 				currentAnim = &leftAnim;
 			}
 
@@ -165,28 +167,25 @@ bool Player::Update(float dt)
 
 		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 		{
-			//LOG("Current force : %f   ,    %f", spaceship->totalForce.x , spaceship->totalForce.y);
-			fPoint f = { 0.0f , 0.0f };
-			float angle = ToAngles(spaceship->rotation);
+			float forceBreak = 1700.0f;
 
-			int f_x = spaceship->totalForce.x * brakeForce;
-			int f_y = spaceship->totalForce.y * brakeForce;
-
-
-			spaceship->AddForce(-f_x, -f_y);
+			if (spaceship->totalForce.x < 0.0f) spaceship->totalForce.x += forceBreak;
+			if (spaceship->totalForce.x > 0.0f) spaceship->totalForce.x -= forceBreak;
+			if (spaceship->totalForce.y < 0.0f) spaceship->totalForce.y += forceBreak;
+			if (spaceship->totalForce.y > 0.0f) spaceship->totalForce.y -= forceBreak;
 		}
 
 		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 
-			spaceship->rotation -= angleRot / 40;
+			spaceship->rotation -= angleRot;
 			currentAnim = &leftAnim;
 		}
 
 		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
 
-			spaceship->rotation += angleRot / 40;
+			spaceship->rotation += angleRot;
 			currentAnim = &rightAnim;
 		}
 
@@ -198,7 +197,29 @@ bool Player::Update(float dt)
 		spaceship->AddForce(gravForce.x, gravForce.y);
 	}
 
+
 	spaceship->collider->SetColliderPos(spaceship->position);
+
+	if (spaceship->position.x + spaceship->collider->width > 1200.0f)
+	{
+		spaceship->position.x = 1200.0f - spaceship->collider->width;
+		spaceship->totalForce.x *= -0.2f;
+	}
+	if (spaceship->position.x < 0)
+	{
+		spaceship->position.x = 0;
+		spaceship->totalForce.x *= -0.2f;
+	}
+	if (spaceship->position.y + spaceship->collider->height > 700)
+	{
+		spaceship->position.y = 700 - spaceship->collider->height;
+		spaceship->totalForce.y *= -0.2f;
+	}
+	if (spaceship->position.y < 0)
+	{
+		spaceship->position.y = 0;
+		spaceship->totalForce.y *= -0.2f;
+	}
 
 	currentAnim->Update(dt);
 	
@@ -223,10 +244,10 @@ bool Player::PostUpdate()
 	//explosion offset
 	if (currentAnim == &explosionAnim)
 	{
-		app->render->DrawTexture(spaceshipTex, spaceship->position.x-12, spaceship->position.y-7, &rect, 1.0f, spaceship->rotation);
+		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation);
 	}
 	else
-		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation);
+		app->render->DrawTexture(spaceshipTex, spaceship->position.x + 6.5f, spaceship->position.y-0.0f, &rect, 1.0f, spaceship->rotation);
 	
 	return ret;
 }
