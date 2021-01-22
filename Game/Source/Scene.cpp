@@ -32,6 +32,7 @@ bool Scene::Start()
 {
 
 	backgroundTex = app->tex->Load("Assets/Textures/background.png");
+	
 
 	for (int i = 0; i < 4; i++)
 	{

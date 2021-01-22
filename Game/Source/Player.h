@@ -34,6 +34,7 @@ public:
 
 	fPoint playerPos2;
 	SDL_Texture* spaceshipTex;
+	SDL_Texture* explosionsTex;
 	SDL_Rect spaceshipRect;
 
 	//animations

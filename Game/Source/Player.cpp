@@ -30,6 +30,8 @@ bool Player::Start()
 	
 	isAlive = true;
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
+	explosionsTex = spaceshipTex;
+
 	playerPos = { 100.0f, 300.0f };
 	spaceshipRect = { 0,0,17,43 };
 
@@ -57,7 +59,7 @@ bool Player::Start()
 	expl_1 = { 99,0,40,60 };
 	expl_2 = { 158,0,40,60 };
 	expl_3 = {228,0,40,60 };
-	expl_4 = { 194,0,40,60 };
+	expl_4 = { 294,0,40,60 };
 	expl_5 = { 359,0,40,60 };
 	expl_1 = { 425,0,40,60 };
 
@@ -87,9 +89,18 @@ bool Player::Update(float dt)
 		Respawn();
 	}
 
+
+	if (!isAlive)
+	{
+		currentAnim->Update(0.015f);
+		currentAnim = &explosionAnim;
+	}
+
 	if (!isAlive && currentAnim->HasFinished())
 	{
+		explosionAnim.Reset();
 		isAlive = true;
+		spaceship->position = playerPos;
 	}
 
 	
@@ -189,7 +200,8 @@ bool Player::Update(float dt)
 		spaceship->AddForce(gravForce.x, gravForce.y);
 	}
 
-	explosionAnim.Update(dt);
+	currentAnim->Update(dt);
+	
 
 	return true;
 }
@@ -209,9 +221,18 @@ bool Player::PostUpdate()
 	{
 
 	}
-	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect,1.0f,spaceship->rotation);
+	
+	//explosion offset
+	if (currentAnim == &explosionAnim)
+	{
+		app->render->DrawTexture(spaceshipTex, spaceship->position.x-12, spaceship->position.y-7, &rect, 1.0f, spaceship->rotation);
+	}
+	else
+		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation);
+	
 	app->render->DrawTexture(spaceshipTex, spaceship2->position.x, spaceship2->position.y, &spaceshipRect);
 
+	
 	return ret;
 }
 
@@ -228,12 +249,12 @@ void Player::Respawn()
 	{
 		isAlive = false;
 		app->audio->PlayFx(app->audio->respawnFx);
-		spaceship->position = playerPos;
+		
 		//Reset forces
 		spaceship->totalForce.x = spaceship->totalForce.y = 0;
 		spaceship->rotation = 0;
 
-		currentAnim = &explosionAnim;
+		
 
 	}
 }
