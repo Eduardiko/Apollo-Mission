@@ -32,7 +32,23 @@ bool Scene::Start()
 {
 
 	backgroundTex = app->tex->Load("Assets/Textures/background.png");
+	planetsTex = app->tex->Load("Assets/Textures/planets.png");
 	
+	
+	earth1 = { 117 , 0 , 96 , 96 };
+	earth2= { 227 , 0 , 96 , 96 };
+	earth3 = { 336 , 0 , 96 , 96 };
+	earth4 = { 458 , 0 , 96 , 96 };
+	
+	earthAnim.PushBack(earth1);
+	earthAnim.PushBack(earth2);
+	earthAnim.PushBack(earth3);
+	earthAnim.PushBack(earth4);
+
+	mars = { 359 ,232,90,90 };
+
+	moon = { 108 , 253,30,30 };
+	Moon.speed = 0.0f;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -66,6 +82,10 @@ bool Scene::Update(float dt)
 
 	backgroundAnim.Update(dt);
 
+	earthAnim.Update(0.012f/20);
+
+	moonPos = CircularMotion(300, 300, 110, dt);
+
 	return true;
 }
 
@@ -89,6 +109,14 @@ bool Scene::PostUpdate()
 		}
 	}
 
+	//earth
+	SDL_Rect _rect = earthAnim.GetCurrentFrame();
+	app->render->DrawTexture(planetsTex, 300, 300, &_rect, 0.1f);
+	//mars
+	app->render->DrawTexture(planetsTex, 700, 600, &mars);
+	
+	
+	app->render->DrawTexture(planetsTex, moonPos.x, moonPos.y, &moon);
 	return true;
 }
 
@@ -98,4 +126,17 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 		return true;
+}
+
+fPoint Scene::CircularMotion(float x, float y, float radius,float dt)
+{
+	float s = 1.0f/500;
+	Moon.speed += dt*s;
+
+	fPoint p = { 0.0f , 0.0f };
+
+	p.x = ((x+48) + cos(Moon.speed) * radius);
+	p.y = (y+48) + sin(Moon.speed) * radius;
+
+	return p;
 }
