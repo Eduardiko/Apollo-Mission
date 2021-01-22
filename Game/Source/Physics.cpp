@@ -162,10 +162,9 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 
 fPoint Physics::Verlet(PhysBody b, float dt)
 {
-	dt = 0.2f;
 
-	if (b.totalForce.x > 50.0f) b.totalForce.x = 50.0f;
-	if (b.totalForce.y > 50.0f) b.totalForce.y = 50.0f;
+	//if (b.totalForce.x > 50.0f) b.totalForce.x = 50.0f;
+	//if (b.totalForce.y > 50.0f) b.totalForce.y = 50.0f;
 
 	b.acceleration.x = b.totalForce.x / b.mass;
 	b.acceleration.y = b.totalForce.y / b.mass;

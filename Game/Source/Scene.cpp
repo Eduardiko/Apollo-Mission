@@ -80,7 +80,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	dt = 0.2f;
 
 	backgroundAnim.Update(dt);
 

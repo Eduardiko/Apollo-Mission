@@ -37,7 +37,7 @@ bool Player::Start()
 	spaceship = new Spaceship(playerPos, 10.0f, 2, 100.0f,0.0f);
 	spaceship->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::SPACESHIP);
 
-	propulsionForce = 0.002f*5;
+	propulsionForce = 100.0f;
 	angleRot = 4.0f;
 	brakeForce = propulsionForce / 3;
 
@@ -79,6 +79,7 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
+	LOG("%f", dt);
 
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
@@ -140,7 +141,7 @@ bool Player::Update(float dt)
 
 			}
 
-			spaceship->AddForce(f.x, f.y);
+			spaceship->AddForce(0.0f, -1500.0f);
 
 
 			currentAnim = &upAnim;

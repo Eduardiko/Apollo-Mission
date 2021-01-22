@@ -17,7 +17,6 @@
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
 {
-	frames = 0;
 
 	win = new Window();
 	input = new Input();
@@ -66,12 +65,12 @@ void App::AddModule(Module* module)
 // Called before render is available
 bool App::Awake()
 {
-	// TODO 3: Load config from XML
+
 	bool ret = LoadConfig();
 
 	if(ret == true)
 	{
-		// TODO 4: Read the title from the config file
+
 		title.Create(configApp.child("title").child_value());
 		win->SetTitle(title.GetString());
 
@@ -80,10 +79,6 @@ bool App::Awake()
 
 		while(item != NULL && ret == true)
 		{
-			// TODO 5: Add a new argument to the Awake method to receive a pointer to an xml node.
-			// If the section with the module name exists in config.xml, fill the pointer with the valid xml_node
-			// that can be used to read all variables for that module.
-			// Send nullptr if the node does not exist in config.xml
 			ret = item->data->Awake(config.child(item->data->name.GetString()));
 			item = item->next;
 		}
@@ -95,6 +90,7 @@ bool App::Awake()
 // Called before the first frame
 bool App::Start()
 {
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.start;
@@ -156,12 +152,27 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	frames++;
+	dt = timer.ReadSec();
+	timer.Start();
 }
 
 // ---------------------------------------------
 void App::FinishUpdate()
 {
-	// This is a good place to call Load / Save functions
+	if (lastFrameTimer.Read() > 1000)
+	{
+		lastFrameTimer.Start();
+	}
+
+	lastFrameMs = timer.Read();
+
+	if (frameDelay > lastFrameMs)
+	{
+		SDL_Delay(frameDelay - lastFrameMs); //fps = 60
+		frames = 60;
+	}
+
 }
 
 // Call modules before each loop iteration
