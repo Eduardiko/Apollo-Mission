@@ -3,16 +3,9 @@
 
 #include "Module.h"
 #include "Animation.h"
+#include "Physics.h"
 
 struct SDL_Texture;
-
-struct Satelite
-{
-	fPoint currentPos = { 0.0f , 0.0f };
-	fPoint center = { 0.0f , 0.0f };
-	float radius;
-	float speed;
-};
 
 class Scene : public Module
 {
@@ -59,11 +52,10 @@ public:
 
 	SDL_Rect mars;
 
-	Satelite Moon;
-	SDL_Rect moon;
+	Planet* moon;
+	SDL_Rect moonRect;
 	fPoint moonPos;
 	SDL_Rect cheesePlanet;
-
 	
 };
 

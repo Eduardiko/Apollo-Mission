@@ -56,14 +56,18 @@ public: // Properties
 	
 
 public: // Methods
-	Spaceship(fPoint position, float mass, int health, float fuel,float rotation);
+	Spaceship(fPoint position, float mass, int health, float fuel, float rotation);
 };
 
 class Planet : public PhysBody
 {
 public:
-	float radius;
+	float atmosphereRadius;
+	fPoint center;
+	float orbitalSpeed;
 
+public:
+	Planet(fPoint position, float mass, float atmosphereRadius);
 };
 
 
@@ -86,8 +90,9 @@ public:
 	RectangleCollider* colliderList[50] = { nullptr };
 	RectangleCollider* AddRectangleCollider(int width, int height, RectangleCollider::Type type);
 	bool detectCollision(RectangleCollider* c1, RectangleCollider* c2);
-	//void solveCollision();
+	void solveCollision(RectangleCollider* c1, RectangleCollider* c2);
 
+	int direction;
 
 private:
 	bool debug;

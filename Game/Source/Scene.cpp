@@ -47,8 +47,10 @@ bool Scene::Start()
 
 	mars = { 359 ,232,90,90 };
 
-	moon = { 108 , 253,30,30 };
-	Moon.speed = 0.0f;
+	moonRect = { 108 , 253,30,30 };
+	moonPos = { 300.0f,300.0f };
+	moon = new Planet(moonPos, 5.0f, 50);
+	moon->orbitalSpeed = 0.0f;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -115,8 +117,7 @@ bool Scene::PostUpdate()
 	//mars
 	app->render->DrawTexture(planetsTex, 700, 600, &mars);
 	
-	
-	app->render->DrawTexture(planetsTex, moonPos.x, moonPos.y, &moon);
+	app->render->DrawTexture(planetsTex, moonPos.x, moonPos.y, &moonRect);
 	return true;
 }
 
@@ -131,12 +132,12 @@ bool Scene::CleanUp()
 fPoint Scene::CircularMotion(float x, float y, float radius,float dt)
 {
 	float s = 1.0f/500;
-	Moon.speed += dt*s;
+	moon->orbitalSpeed += dt*s;
 
 	fPoint p = { 0.0f , 0.0f };
 
-	p.x = ((x+48) + cos(Moon.speed) * radius);
-	p.y = (y+48) + sin(Moon.speed) * radius;
+	p.x = ((x+48) + cos(moon->orbitalSpeed) * radius);
+	p.y = (y+48) + sin(moon->orbitalSpeed) * radius;
 
 	return p;
 }

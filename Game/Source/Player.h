@@ -29,10 +29,8 @@ public:
 	Spaceship* spaceship;
 	fPoint gravForce;
 
-	Spaceship* spaceship2;
 	fPoint playerPos;
 
-	fPoint playerPos2;
 	SDL_Texture* spaceshipTex;
 	SDL_Texture* explosionsTex;
 	SDL_Rect spaceshipRect;

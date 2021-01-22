@@ -21,7 +21,6 @@ Player::~Player()
 bool Player::Awake(pugi::xml_node&)
 {
 	
-
 	return true;
 }
 
@@ -36,9 +35,7 @@ bool Player::Start()
 	spaceshipRect = { 0,0,17,43 };
 
 	spaceship = new Spaceship(playerPos, 10.0f, 2, 100.0f,0.0f);
-
-	playerPos2 = { 500.0f, 400.0f };
-	spaceship2 = new Spaceship(playerPos2, 10.0f, 2, 100.0f,0.0f);
+	spaceship->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::SPACESHIP);
 
 	propulsionForce = 0.002f*5;
 	angleRot = 4.0f;
@@ -200,9 +197,10 @@ bool Player::Update(float dt)
 		spaceship->AddForce(gravForce.x, gravForce.y);
 	}
 
+	spaceship->collider->SetColliderPos(spaceship->position);
+
 	currentAnim->Update(dt);
 	
-
 	return true;
 }
 
@@ -214,7 +212,6 @@ bool Player::PostUpdate()
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
-	//gravForce = app->physics->GravityForce(*spaceship, *spaceship2);
 	//LOG("Rotation : %f", spaceship->rotation);
 	SDL_Rect rect = currentAnim->GetCurrentFrame();
 	if (currentAnim == &explosionAnim)
@@ -229,9 +226,6 @@ bool Player::PostUpdate()
 	}
 	else
 		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation);
-	
-	app->render->DrawTexture(spaceshipTex, spaceship2->position.x, spaceship2->position.y, &spaceshipRect);
-
 	
 	return ret;
 }
@@ -253,9 +247,6 @@ void Player::Respawn()
 		//Reset forces
 		spaceship->totalForce.x = spaceship->totalForce.y = 0;
 		spaceship->rotation = 0;
-
-		
-
 	}
 }
 
