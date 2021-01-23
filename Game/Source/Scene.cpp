@@ -43,18 +43,18 @@ bool Scene::Start()
 	moonRect = { 108 , 253,30,30 };
 
 	earthiPos = { 300.0f, 300.0f };
-	earth = new Planet(earthiPos, 100.0f, 200.0f);
+	earth = new Planet(earthiPos, 200.0f, 200.0f);
 	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::PLANET);
 	planetList.Add(*earth);
 
 	marsiPos = { 700.0f, 600.0f };
-	mars = new Planet(marsiPos, 30.0f, 70.0f);
-	mars->collider = app->physics->AddRectangleCollider(72, 72, RectangleCollider::Type::PLANET);
+	mars = new Planet(marsiPos, 100.0f, 130.0f);
+	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::PLANET);
 	planetList.Add(*mars);
 
 	mooniPos = { 300.0f,300.0f };
 	moon = new Planet(mooniPos, 20.0f, 1.0f);
-	moon->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::PLANET);
+	moon->collider = app->physics->AddRectangleCollider(24, 24, RectangleCollider::Type::PLANET);
 	planetList.Add(*moon);
 	moon->orbitalSpeed = 0.0f;
 
@@ -90,8 +90,8 @@ bool Scene::Update(float dt)
 	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, moon, dt);
 
 	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
-	mars->collider->SetColliderPos(mars->position, 0, 0);
-	moon->collider->SetColliderPos(moon->position, 0, 0);
+	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
+	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
 
 	return true;
 }

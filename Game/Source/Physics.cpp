@@ -83,12 +83,16 @@ bool Physics::Start()
 
 	gravityConstant = 10000.0f;
 
+	debug = false;
+
 	return true;
 }
 
 
 bool Physics::Update(float dt)
 {
+
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) debug = !debug;
 
 	for (int i = 0; i < app->player->spaceship->forcesList.Count(); i++)
 	{
@@ -130,12 +134,15 @@ bool Physics::Update(float dt)
 
 bool Physics::PostUpdate()
 {
-	for (uint i = 0; i < 50; ++i)
+	if (debug)
 	{
-		if (colliderList[i] == nullptr)
-			continue;
-		SDL_Rect rect = { colliderList[i]->position.x, colliderList[i]->position.y, colliderList[i]->width, colliderList[i]->height };
-		app->render->DrawRectangle(rect, 255, 255, 255, 55, true, true);
+		for (uint i = 0; i < 50; ++i)
+		{
+			if (colliderList[i] == nullptr)
+				continue;
+			SDL_Rect rect = { colliderList[i]->position.x, colliderList[i]->position.y, colliderList[i]->width, colliderList[i]->height };
+			app->render->DrawRectangle(rect, 255, 255, 255, 55, true, true);
+		}
 	}
 
 	return true;
@@ -161,7 +168,9 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 	force.y = -gravityConstant * b1.mass * b2.mass * sin(angle)/ pow(hypotenuse, 2);
 
 	if (force.x > 1000.0f) force.x = 1000.0f;
+	if (force.x < -1000.0f) force.x = -1000.0f;
 	if (force.y > 1000.0f) force.y = 1000.0f;
+	if (force.y < -1000.0f) force.y = -1000.0f;
 
 	return force;
 }
@@ -232,24 +241,24 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 	{
 		app->player->spaceship->position.y -= subs;
 		app->player->spaceship->totalForce.y *= -0.2f;
-		app->player->spaceship->totalForce.x *= 0.5f;
+		app->player->spaceship->totalForce.x *= 0.2f;
 	}
 	if (direction == 2)
 	{
 		app->player->spaceship->position.y += subs;
 		app->player->spaceship->totalForce.y *= -0.2f;
-		app->player->spaceship->totalForce.x *= 0.5f;
+		app->player->spaceship->totalForce.x *= 0.2f;
 	}
 	if (direction == 3)
 	{
 		app->player->spaceship->position.x -= subs;
 		app->player->spaceship->totalForce.x *= -0.2f;
-		app->player->spaceship->totalForce.y *= 0.5f;
+		app->player->spaceship->totalForce.y *= 0.2f;
 	}
 	if (direction == 4)
 	{
 		app->player->spaceship->position.x += subs;
 		app->player->spaceship->totalForce.x *= -0.2f;
-		app->player->spaceship->totalForce.y *= 0.5f;
+		app->player->spaceship->totalForce.y *= 0.2f;
 	}
 }
