@@ -30,6 +30,8 @@ bool Player::Start()
 	
 	isAlive = true;
 	fuel = MAX_FUEL;
+	fuelConsumption = 1.0f / 10;
+	conqueredMars = conquredEarth = false;
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	explosionsTex = spaceshipTex;
 
@@ -82,8 +84,8 @@ bool Player::PreUpdate()
 
 bool Player::Update(float dt)
 {
-	
-	//LOG("%f", dt);
+	fuel -= fuelConsumption;
+	LOG("fuel : %f", fuel);
 
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{

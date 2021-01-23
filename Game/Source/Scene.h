@@ -7,6 +7,13 @@
 
 struct SDL_Texture;
 class Planet;
+class Fuel;
+
+struct pickeableFuel
+{
+	fPoint pos = { 0.0f,0.0f };
+
+};
 
 class Scene : public Module
 {
@@ -64,6 +71,8 @@ public:
 	fPoint marsiPos;
 	fPoint mooniPos;
 	fPoint asteroidiPos;
+
+	Fuel* fuel_1;
 
 };
 

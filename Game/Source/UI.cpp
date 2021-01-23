@@ -37,7 +37,7 @@ bool UI::Start()
 {
 	LOG("UI start");
 	counter = 0;
-
+	pickedFuel = false;
 	uiTex = app->tex->Load("Assets/Textures/ui.png");
 
 
@@ -47,9 +47,21 @@ bool UI::Start()
 	fuel.PushBack({ 82,122,60,70 });
 	fuel.PushBack({ 141,122,60,70 });
 
+	lowFuel.PushBack({ 141,122,60,70 });
+	lowFuel.PushBack({ 206,122,60,70 });
+
+
+	conquered.PushBack({ 0,227,238,200 });
+	conquered.PushBack({ 238,227,238,200 });
+
+	fuelIcon.PushBack({ 315,143,40,45 });
+	fuelIcon.PushBack({ 356,143,40,45 });
+
+
 	turnOff.PushBack({ 0,0,0,0 });
 
 	popUpAnim = &popUp;
+	fuelIconAnim = &fuelIcon;
 	
 	return true;
 }
@@ -68,7 +80,7 @@ bool UI::Update(float dt)
 	
 	if(app->player->isAlive)
 	{
-		if (app->player->fuel > 0)
+		if (app->player->fuel > 50)
 		{
 			fuelAnim = &fuel;
 		}
@@ -76,6 +88,17 @@ bool UI::Update(float dt)
 		{
 			fuelAnim = &lowFuel;
 		}
+	}
+	if (app->player->conquredEarth)
+	{
+		conqueredAnim = &conquered;
+		conqueredAnim->Update(dt);
+		SDL_Rect rect = conqueredAnim->GetCurrentFrame();
+		app->render->DrawTexture(uiTex, 300, 300, &rect, 1.0f);
+	}
+	if (pickedFuel)
+	{
+		fuelIconAnim = &turnOff;
 	}
 	
 
@@ -86,6 +109,11 @@ bool UI::Update(float dt)
 	fuelAnim->Update(dt);
 	rect = fuelAnim->GetCurrentFrame();
 	app->render->DrawTexture(uiTex, 10, 10, &rect, 1.0f);
+
+	//fuel icon
+	fuelIconAnim->Update(dt);
+	rect = fuelIconAnim->GetCurrentFrame();
+	app->render->DrawTexture(uiTex, app->scene->fuel_1->pos.x, app->scene->fuel_1->pos.y, &rect, 1.0f);
 
 	counter++;
 	return true;
@@ -104,3 +132,11 @@ bool UI::CleanUp()
 	return true;
 }
 
+void UpdateFuel()
+{
+	/*if (pickedFuel == true)
+	{
+		app->player->fuel = MAX_FUEL;
+	}*/
+
+}

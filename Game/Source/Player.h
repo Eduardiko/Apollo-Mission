@@ -65,6 +65,9 @@ public:
 public:
 	bool isAlive;
 	float fuel;
+	float fuelConsumption;
+	
+	bool conquredEarth, conqueredMars;
 	
 };
 

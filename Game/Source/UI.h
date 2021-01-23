@@ -32,6 +32,7 @@ public:
 
 	// Called before quitting
 	bool CleanUp();
+	void UpdateFuel();
 
 private:
 	SDL_Texture *uiTex;
@@ -43,9 +44,17 @@ private:
 	Animation* popUpAnim;
 	Animation popUp;
 
+	Animation* conqueredAnim;
+	Animation conquered;
+
+	Animation* fuelIconAnim;
+	Animation fuelIcon;
+
 	Animation turnOff;
 private:
 	int counter;
+public:
+	bool pickedFuel;
 };
 
 #endif // __RENDER_H__

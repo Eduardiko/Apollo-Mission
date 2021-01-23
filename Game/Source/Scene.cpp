@@ -63,6 +63,8 @@ bool Scene::Start()
 	asteroid->collider = app->physics->AddRectangleCollider(23, 23, RectangleCollider::ASTEROID);
 	planetList.Add(*asteroid);
 
+	fuel_1 = new Fuel(700, 300);
+
 	for (int i = 0; i < 4; i++)
 	{
 		backgroundAnim.PushBack({ i * 64,0,64,64 });

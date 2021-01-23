@@ -6,6 +6,8 @@
 #include "Point.h"
 #include "Math.h"
 
+#include "Log.h"
+
 void PhysBody::AddForce(float forcex, float forcey)
 {
 	fPoint force;
@@ -65,6 +67,15 @@ Planet::Planet(fPoint position, float mass, float atmosphereRadius)
 	this->position = position;
 	this->mass = mass;
 	this->atmosphereRadius = atmosphereRadius;
+}
+
+Fuel::Fuel(float x,float y)
+{
+	this->pos.x = x; 
+	this->pos.y = y;
+	this->picked = false;
+	this->collider= app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::FUEL);
+
 }
 
 Physics::Physics() : Module()
@@ -139,7 +150,11 @@ bool Physics::PostUpdate()
 			if (colliderList[i] == nullptr)
 				continue;
 			SDL_Rect rect = { colliderList[i]->position.x, colliderList[i]->position.y, colliderList[i]->width, colliderList[i]->height };
-			app->render->DrawRectangle(rect, 255, 255, 255, 55, true, true);
+			if(colliderList[i]->type== RectangleCollider::Type::FUEL)
+				app->render->DrawRectangle(rect, 0, 255, 0, 55, true, true);
+			else
+				app->render->DrawRectangle(rect, 255, 255, 255, 55, true, true);
+			
 		}
 	}
 
@@ -194,13 +209,20 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 
 	if (c2->type == RectangleCollider::Type::PLANET && c1->type == RectangleCollider::Type::PLANET) return false;
 
+	if (c2->type == RectangleCollider::Type::SPACESHIP &&  c1->type == RectangleCollider::Type::ASTEROID)
+	{
+		//app->player->Respawn();
+	}
+
 	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::PLANET || c1->type == RectangleCollider::Type::ASTEROID))
 	{
+		LOG("planet");
 		holdC = c2;
 		c2 = c1;
 		c1 = holdC;
 	}
 
+	
 	c1->min.x = c1->position.x;
 	c1->min.y = c1->position.y + c1->height;
 	c1->max.x = c1->position.x + c1->width;
@@ -233,6 +255,7 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
 	int subs = 1;
+	LOG("collision");
 
 	if (direction == 1)
 	{
