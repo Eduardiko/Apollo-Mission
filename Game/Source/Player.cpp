@@ -86,7 +86,7 @@ bool Player::PreUpdate()
 
 bool Player::Update(float dt)
 {
-	fuel -= fuelConsumption;
+	
 	//LOG("fuel : %f", fuel);
 	if (conqueredMars && conquredEarth)
 		won = true;
@@ -122,7 +122,7 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		{
-
+			fuel -= fuelConsumption;
 			fPoint f = { 0.0f, 0.0f };
 
 			float angle = ToAngles(spaceship->rotation);
@@ -165,14 +165,14 @@ bool Player::Update(float dt)
 
 			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 			{
-
+				fuel -= fuelConsumption/2;
 				spaceship->rotation += angleRot;
 				currentAnim = &rightAnim;
 			}
 
 			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 			{
-
+				fuel -= fuelConsumption / 2;
 				spaceship->rotation -= angleRot;
 				currentAnim = &leftAnim;
 			}

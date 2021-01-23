@@ -214,6 +214,11 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 		//app->player->Respawn();
 	}
 
+	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::FUEL)
+	{
+		LOG("picked fuel");
+	}
+
 	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::PLANET || c1->type == RectangleCollider::Type::ASTEROID))
 	{
 		
