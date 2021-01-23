@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "Window.h"
 #include "Scene.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -150,5 +151,26 @@ void Scene::DrawRadius()
 	for (int i = 0; i < planetList.Count(); i++)
 	{
 		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].atmosphereRadius, 255, 255, 255, 50);
+	}
+}
+
+void Scene::GravityField()
+{
+	for (int i = 0; i < planetList.Count(); i++)
+	{
+		float distancex;
+		float distancey;
+		distancex = abs(app->player->spaceship->collider->center.x - planetList[i].collider->center.x);
+		distancey = abs(app->player->spaceship->collider->center.y - planetList[i].collider->center.y);
+
+		float distance;
+		distance = sqrt(pow(distancex, 2) + pow(distancey, 2));
+
+		if (distance < planetList[i].atmosphereRadius)
+		{
+			fPoint force;
+			force = app->physics->GravityForce(*app->player->spaceship, planetList[i]);
+			app->player->spaceship->AddForce(force.x, force.y);
+		}
 	}
 }

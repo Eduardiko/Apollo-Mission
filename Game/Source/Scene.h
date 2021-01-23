@@ -37,6 +37,7 @@ public:
 
 	fPoint CircularMotion(float x, float y, float radius,float dt);
 	void DrawRadius();
+	void GravityField();
 
 private:
 	SDL_Texture* backgroundTex;

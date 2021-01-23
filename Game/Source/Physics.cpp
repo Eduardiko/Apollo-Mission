@@ -78,7 +78,7 @@ Physics::~Physics()
 bool Physics::Start()
 {
 
-	gravityConstant = 0.2f;
+	gravityConstant = 10000.0f;
 
 	return true;
 }

@@ -4,6 +4,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Window.h"
+#include "Scene.h"
 #include "Player.h"
 
 #include "Log.h"
@@ -241,6 +242,8 @@ bool Player::PostUpdate()
 
 	}
 	
+	app->scene->GravityField();
+
 	//explosion offset
 	if (currentAnim == &explosionAnim)
 	{
