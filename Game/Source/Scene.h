@@ -35,7 +35,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	fPoint CircularMotion(float x, float y, float radius, Planet* planet, float dt);
+	fPoint CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt);
 	void DrawRadius();
 	void GravityField();
 
@@ -52,16 +52,19 @@ public:
 	SDL_Rect whitePlanetRect;
 	SDL_Rect marsRect;
 	SDL_Rect moonRect;
+	SDL_Rect asteroidRect;
 
 	Planet* earth;
 	Planet* mars;
 	Planet* whitePlanet;
 	Planet* moon;
-	
+	Planet* asteroid;
+
 	fPoint earthiPos;
 	fPoint marsiPos;
 	fPoint mooniPos;
-	
+	fPoint asteroidiPos;
+
 };
 
 #endif // __SCENE_H__

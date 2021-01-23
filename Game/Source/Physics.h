@@ -21,6 +21,7 @@ struct RectangleCollider
 	float width;
 	float height;
 	fPoint center;
+	bool pendingToDelete = false;
 	Type type;
 
 	RectangleCollider(float width, float height, Type type);
