@@ -55,7 +55,8 @@ bool Scene::Start()
 	moon = new Planet(mooniPos, 20.0f, 1.0f);
 	moon->collider = app->physics->AddRectangleCollider(24, 24, RectangleCollider::Type::PLANET);
 	planetList.Add(*moon);
-	moon->orbitalSpeed = 0.0f;
+	
+	asteroidiPos = { 700.0f, 600.0f };
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -86,7 +87,7 @@ bool Scene::Update(float dt)
 
 	backgroundAnim.Update(dt);
 
-	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, moon, dt);
+	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, 0.2f, moon, dt);
 
 	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
 	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
@@ -132,15 +133,14 @@ bool Scene::CleanUp()
 		return true;
 }
 
-fPoint Scene::CircularMotion(float x, float y, float radius, Planet* planet, float dt)
+fPoint Scene::CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt)
 {
-	float s = 0.5f;
-	moon->orbitalSpeed += dt*s;
+	planet->orbitalSpeed += dt*speed;
 
 	fPoint p = { 0.0f , 0.0f };
 
-	p.x = x - planet->collider->width / 2 + cos(moon->orbitalSpeed) * radius;
-	p.y = y - planet->collider->height / 2 + sin(moon->orbitalSpeed) * radius;
+	p.x = x - planet->collider->width / 2 + cos(planet->orbitalSpeed) * radius;
+	p.y = y - planet->collider->height / 2 + sin(planet->orbitalSpeed) * radius;
 
 	return p;
 }
