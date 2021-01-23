@@ -74,6 +74,7 @@ bool Player::Start()
 	explosionAnim.PushBack(expl_4);
 	explosionAnim.PushBack(expl_5);
 	explosionAnim.PushBack(expl_6);
+	explosionAnim.speed = 7.0f;
 	explosionAnim.loop = false;
 
 	return true;
@@ -91,6 +92,7 @@ bool Player::Update(float dt)
 	if (conqueredMars && conquredEarth)
 		won = true;
 
+	
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
 		LOG("Respawning spaceship");
@@ -101,7 +103,7 @@ bool Player::Update(float dt)
 		app->ui->WinGame();
 	}
 	
-
+	
 
 	if (!isAlive)
 	{
@@ -116,8 +118,9 @@ bool Player::Update(float dt)
 		spaceship->position = playerPos;
 	}
 
-	
-	if (isAlive)
+	if (fuel <= 0)
+		currentAnim = &idleAnim;
+	if (isAlive && fuel >=0)
 	{
 
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
@@ -251,8 +254,10 @@ bool Player::PostUpdate()
 	SDL_Rect rect = currentAnim->GetCurrentFrame();
 	
 	app->scene->GravityField();
-
-	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation, 8, 14);
+	if(currentAnim==&explosionAnim)
+		app->render->DrawTexture(spaceshipTex, spaceship->position.x-10, spaceship->position.y-7, &rect, 1.0f, spaceship->rotation, 8, 14);
+	else
+		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation, 8, 14);
 
 	return ret;
 }
@@ -277,16 +282,22 @@ void Player::Respawn()
 	}
 }
 
+
+void Player::Die()
+{
+
+}
+
 float Player::ToAngles(float rot)
 {
 	int degrees = rot;
-	
-	 degrees = degrees % 360;
 
-	 if (degrees < 0)
-	 {
-		 degrees += 360;
-	 }
+	degrees = degrees % 360;
 
-	 return degrees;
+	if (degrees < 0)
+	{
+		degrees += 360;
+	}
+
+	return degrees;
 }

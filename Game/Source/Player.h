@@ -26,6 +26,7 @@ public:
 	bool CleanUp();
 
 	void Respawn();
+	void Die();
 	float ToAngles(float rot);
 
 	Spaceship* spaceship;
