@@ -120,6 +120,8 @@ bool UI::Update(float dt)
 	app->render->DrawTexture(uiTex, app->scene->fuel_1->pos.x, app->scene->fuel_1->pos.y, &rect, 1.0f);
 
 	winAnim->Update(dt);
+	 rect = winAnim->GetCurrentFrame();
+	app->render->DrawTexture(uiTex, 300, 300, &rect, 1.0f);
 
 	counter++;
 	return true;
