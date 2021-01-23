@@ -128,6 +128,7 @@ bool UI::Update(float dt)
 		app->render->DrawTexture(uiTex, 300, 300, &rect, 1.0f);
 	}
 
+	UpdateFuel();
 	counter++;
 	return true;
 }
@@ -147,11 +148,21 @@ bool UI::CleanUp()
 
 void UI::UpdateFuel()
 {
-	/*if (pickedFuel == true)
+	
+	if (pickedFuel == true)
 	{
 		app->player->fuel = MAX_FUEL;
-	}*/
-
+	}
+	if (app->player->fuel > 0)
+	{
+		SDL_Rect rect = { 90,35,app->player->fuel * 2.5f,30 };
+		if (app->player->fuel > 45)
+			app->render->DrawRectangle(rect, 0, 255, 0, 255);
+		else if (app->player->fuel < 45 && app->player->fuel > 15)
+			app->render->DrawRectangle(rect, 255, 255, 0, 255);
+		else
+			app->render->DrawRectangle(rect, 255, 0, 0, 255);
+	}
 }
 
 void UI::WinGame()
