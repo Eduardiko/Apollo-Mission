@@ -68,6 +68,7 @@ public:
 	float fuelConsumption;
 	
 	bool conquredEarth, conqueredMars;
+	bool won;
 	
 };
 
