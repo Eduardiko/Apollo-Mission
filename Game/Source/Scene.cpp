@@ -41,6 +41,7 @@ bool Scene::Start()
 	whitePlanetRect = { 336 , 0 , 96 , 96 };
 	marsRect = { 359 ,232, 72, 72 };
 	moonRect = { 108 , 253,30,30 };
+	asteroidRect = { 192,253,27,27 };
 
 	earthiPos = { 300.0f, 300.0f };
 	earth = new Planet(earthiPos, 200.0f, 200.0f);
@@ -58,6 +59,9 @@ bool Scene::Start()
 	planetList.Add(*moon);
 	
 	asteroidiPos = { 700.0f, 600.0f };
+	asteroid = new Planet(asteroidiPos, 0.0f, 0.0f);
+	asteroid->collider = app->physics->AddRectangleCollider(23, 23, RectangleCollider::ASTEROID);
+	planetList.Add(*asteroid);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -89,10 +93,12 @@ bool Scene::Update(float dt)
 	backgroundAnim.Update(dt);
 
 	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, 0.2f, moon, dt);
+	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->atmosphereRadius, 1.0f, asteroid, dt);
 
 	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
 	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
 	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
+	asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
 
 	return true;
 }
@@ -117,10 +123,11 @@ bool Scene::PostUpdate()
 		}
 	}
 
-	app->render->DrawTexture(planetsTex, earth->position.x, earth->position.x, &earthRect, 0.1f);
+	app->render->DrawTexture(planetsTex, earth->position.x, earth->position.x, &earthRect);
 	app->render->DrawTexture(planetsTex, mars->position.x, mars->position.y, &marsRect);
 	app->render->DrawTexture(planetsTex, moon->position.x, moon->position.y, &moonRect);
-	
+	app->render->DrawTexture(planetsTex, asteroid->position.x, asteroid->position.y, &asteroidRect);
+
 	DrawRadius();
 
 

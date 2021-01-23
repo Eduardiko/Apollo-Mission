@@ -52,6 +52,7 @@ public:
 	SDL_Rect whitePlanetRect;
 	SDL_Rect marsRect;
 	SDL_Rect moonRect;
+	SDL_Rect asteroidRect;
 
 	Planet* earth;
 	Planet* mars;

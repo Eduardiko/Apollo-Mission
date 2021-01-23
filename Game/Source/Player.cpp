@@ -243,7 +243,6 @@ bool Player::PostUpdate()
 
 	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation, 8, 14);
 
-	
 	return ret;
 }
 
