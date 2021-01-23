@@ -121,11 +121,12 @@ bool UI::Update(float dt)
 
 	if (app->player->won)
 	{
-		WinGame();
+		
 
 		winAnim->Update(dt);
 		rect = winAnim->GetCurrentFrame();
-		app->render->DrawTexture(uiTex, 300, 300, &rect, 1.0f);
+		app->render->DrawTexture(uiTex, 300+127, 250, &rect, 1.0f);
+		
 	}
 
 	UpdateFuel();
@@ -167,7 +168,8 @@ void UI::UpdateFuel()
 
 void UI::WinGame()
 {
-	LOG("Win!");
+	app->player->won = true;
+	//LOG("Win!");
 	app->audio->PlayFx(app->audio->winFx);
 	
 
