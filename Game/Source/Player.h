@@ -8,6 +8,8 @@
 
 #include "SDL/include/SDL.h"
 
+#define MAX_FUEL 100
+
 struct SDL_Texture;
 
 class Player : public Module
@@ -62,6 +64,7 @@ public:
 
 public:
 	bool isAlive;
+	float fuel;
 	
 };
 

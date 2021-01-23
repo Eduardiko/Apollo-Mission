@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Player.h"
+#include "UI.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -121,6 +122,9 @@ bool Scene::PostUpdate()
 	app->render->DrawTexture(planetsTex, moon->position.x, moon->position.y, &moonRect);
 	
 	DrawRadius();
+
+
+	app->ui->Update(app->dt);
 
 	return true;
 }
