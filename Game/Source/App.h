@@ -16,6 +16,7 @@ class Audio;
 class Scene;
 class Physics;
 class Player;
+class UI;
 
 class App
 {
@@ -79,6 +80,7 @@ public:
 	Scene* scene;
 	Physics* physics;
 	Player* player;
+	UI* ui;
 
 private:
 
@@ -102,7 +104,7 @@ private:
 	Timer lastFrameTimer;
 	uint frames = 0;
 	uint32 lastFrameMs = 0;
-
+public:
 	float dt;
 };
 

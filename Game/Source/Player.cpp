@@ -29,6 +29,7 @@ bool Player::Start()
 {
 	
 	isAlive = true;
+	fuel = MAX_FUEL;
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	explosionsTex = spaceshipTex;
 
@@ -82,7 +83,7 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
-	LOG("%f", dt);
+	//LOG("%f", dt);
 
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
@@ -93,7 +94,7 @@ bool Player::Update(float dt)
 
 	if (!isAlive)
 	{
-		currentAnim->Update(0.015f);
+		currentAnim->Update(dt);
 		currentAnim = &explosionAnim;
 	}
 
