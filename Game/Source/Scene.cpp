@@ -55,7 +55,7 @@ bool Scene::Start()
 
 	mooniPos = { 300.0f,300.0f };
 	moon = new Planet(mooniPos, 20.0f, 1.0f);
-	moon->collider = app->physics->AddRectangleCollider(24, 24, RectangleCollider::Type::PLANET);
+	moon->collider = app->physics->AddRectangleCollider(24, 24, RectangleCollider::Type::ASTEROID);
 	planetList.Add(*moon);
 	
 	asteroidiPos = { 700.0f, 600.0f };
