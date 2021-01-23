@@ -24,7 +24,7 @@ struct RectangleCollider
 	Type type;
 
 	RectangleCollider(float width, float height, Type type);
-	void SetColliderPos(fPoint position);
+	void SetColliderPos(fPoint position, float offX, float offY);
 };
 
 class PhysBody

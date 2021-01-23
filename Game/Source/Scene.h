@@ -35,7 +35,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	fPoint CircularMotion(float x, float y, float radius,float dt);
+	fPoint CircularMotion(float x, float y, float radius, Planet* planet, float dt);
 	void DrawRadius();
 	void GravityField();
 

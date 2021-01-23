@@ -36,23 +36,23 @@ bool Scene::Start()
 	planetsTex = app->tex->Load("Assets/Textures/planets.png");
 	
 	
-	earthRect = { 117 , 0 , 96 , 96 };
+	earthRect = { 117 , 0 , 100 , 96 };
 	whitePlanetRect = { 336 , 0 , 96 , 96 };
 	marsRect = { 359 ,232, 72, 72 };
 	moonRect = { 108 , 253,30,30 };
 
 	earthiPos = { 300.0f, 300.0f };
-	earth = new Planet(earthiPos, 30.0f, 100.0f);
-	earth->collider = app->physics->AddRectangleCollider(96, 96, RectangleCollider::Type::PLANET);
+	earth = new Planet(earthiPos, 100.0f, 200.0f);
+	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::PLANET);
 	planetList.Add(*earth);
 
 	marsiPos = { 700.0f, 600.0f };
-	mars = new Planet(marsiPos, 20.0f, 70.0f);
+	mars = new Planet(marsiPos, 30.0f, 70.0f);
 	mars->collider = app->physics->AddRectangleCollider(72, 72, RectangleCollider::Type::PLANET);
 	planetList.Add(*mars);
 
 	mooniPos = { 300.0f,300.0f };
-	moon = new Planet(mooniPos, 5.0f, 50.0f);
+	moon = new Planet(mooniPos, 20.0f, 1.0f);
 	moon->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::PLANET);
 	planetList.Add(*moon);
 	moon->orbitalSpeed = 0.0f;
@@ -86,11 +86,11 @@ bool Scene::Update(float dt)
 
 	backgroundAnim.Update(dt);
 
-	moon->position = CircularMotion(300, 300, 110, dt);
+	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, moon, dt);
 
-	earth->collider->SetColliderPos(earth->position);
-	mars->collider->SetColliderPos(mars->position);
-	moon->collider->SetColliderPos(moon->position);
+	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
+	mars->collider->SetColliderPos(mars->position, 0, 0);
+	moon->collider->SetColliderPos(moon->position, 0, 0);
 
 	return true;
 }
@@ -132,15 +132,15 @@ bool Scene::CleanUp()
 		return true;
 }
 
-fPoint Scene::CircularMotion(float x, float y, float radius,float dt)
+fPoint Scene::CircularMotion(float x, float y, float radius, Planet* planet, float dt)
 {
 	float s = 0.5f;
 	moon->orbitalSpeed += dt*s;
 
 	fPoint p = { 0.0f , 0.0f };
 
-	p.x = ((x+48) + cos(moon->orbitalSpeed) * radius);
-	p.y = (y+48) + sin(moon->orbitalSpeed) * radius;
+	p.x = x - planet->collider->width / 2 + cos(moon->orbitalSpeed) * radius;
+	p.y = y - planet->collider->height / 2 + sin(moon->orbitalSpeed) * radius;
 
 	return p;
 }

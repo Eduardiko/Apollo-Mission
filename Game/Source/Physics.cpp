@@ -45,9 +45,10 @@ RectangleCollider* Physics::AddRectangleCollider(int width, int height, Rectangl
 	return ret;
 }
 
-void RectangleCollider::SetColliderPos(fPoint position)
+void RectangleCollider::SetColliderPos(fPoint position, float offX, float offY)
 {
-	this->position = position;
+	this->position.x = position.x + offX;
+	this->position.y = position.y + offY;
 }
 
 Spaceship::Spaceship(fPoint position, float mass, int health, float fuel,float rotation)
@@ -157,6 +158,9 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 	force.x = i * gravityConstant * b1.mass * b2.mass * cos(angle)/ pow(hypotenuse, 2);
 	force.y = -gravityConstant * b1.mass * b2.mass * sin(angle)/ pow(hypotenuse, 2);
 
+	if (force.x > 1000.0f) force.x = 1000.0f;
+	if (force.y > 1000.0f) force.y = 1000.0f;
+
 	return force;
 }
 
@@ -225,20 +229,24 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 	{
 		app->player->spaceship->position.y -= subs;
 		app->player->spaceship->totalForce.y *= -0.2f;
+		app->player->spaceship->totalForce.x *= 0.5f;
 	}
 	if (direction == 2)
 	{
 		app->player->spaceship->position.y += subs;
 		app->player->spaceship->totalForce.y *= -0.2f;
+		app->player->spaceship->totalForce.x *= 0.5f;
 	}
 	if (direction == 3)
 	{
 		app->player->spaceship->position.x -= subs;
 		app->player->spaceship->totalForce.x *= -0.2f;
+		app->player->spaceship->totalForce.y *= 0.5f;
 	}
 	if (direction == 4)
 	{
 		app->player->spaceship->position.x += subs;
 		app->player->spaceship->totalForce.x *= -0.2f;
+		app->player->spaceship->totalForce.y *= 0.5f;
 	}
 }

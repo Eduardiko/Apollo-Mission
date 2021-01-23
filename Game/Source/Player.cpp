@@ -107,6 +107,7 @@ bool Player::Update(float dt)
 	
 	if (isAlive)
 	{
+
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		{
 
@@ -195,11 +196,8 @@ bool Player::Update(float dt)
 			currentAnim = &idleAnim;
 		}
 
-		spaceship->AddForce(gravForce.x, gravForce.y);
 	}
 
-
-	spaceship->collider->SetColliderPos(spaceship->position);
 
 	if (spaceship->position.x + spaceship->collider->width > 1200.0f)
 	{
@@ -222,6 +220,8 @@ bool Player::Update(float dt)
 		spaceship->totalForce.y *= -0.2f;
 	}
 
+	spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
+
 	currentAnim->Update(dt);
 	
 	return true;
@@ -237,10 +237,6 @@ bool Player::PostUpdate()
 
 	//LOG("Rotation : %f", spaceship->rotation);
 	SDL_Rect rect = currentAnim->GetCurrentFrame();
-	if (currentAnim == &explosionAnim)
-	{
-
-	}
 	
 	app->scene->GravityField();
 
