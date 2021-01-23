@@ -35,7 +35,7 @@ public:
 	void UpdateFuel();
 	void WinGame();
 
-private:
+public:
 	SDL_Texture* uiTex;
 
 	Animation* fuelAnim;
@@ -59,6 +59,9 @@ private:
 	int counter;
 public:
 	bool pickedFuel;
+
+	bool EarthHaveBeenConquered;
+	bool MarsaveBeenConquered;
 };
 
 #endif // __RENDER_H__

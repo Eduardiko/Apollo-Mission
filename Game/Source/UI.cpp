@@ -38,6 +38,7 @@ bool UI::Start()
 	LOG("UI start");
 	counter = 0;
 	pickedFuel = false;
+	EarthHaveBeenConquered = MarsaveBeenConquered = false;
 	uiTex = app->tex->Load("Assets/Textures/ui.png");
 
 
@@ -51,8 +52,14 @@ bool UI::Start()
 	lowFuel.PushBack({ 206,122,60,70 });
 
 
-	conquered.PushBack({ 0,227,238,200 });
-	conquered.PushBack({ 238,227,238,200 });
+	
+	conquered.PushBack({ 0,227,238,105});
+	conquered.PushBack({ 238,227,238,105 });
+	conquered.PushBack({ 0,227,238,105 });
+	conquered.PushBack({ 238,227,238,105 });
+	conquered.PushBack({ 0,0,0,0 });
+	conquered.loop = false;
+	
 
 	fuelIcon.PushBack({ 315,143,40,45 });
 	fuelIcon.PushBack({ 356,143,40,45 });
@@ -98,8 +105,10 @@ bool UI::Update(float dt)
 		conqueredAnim = &conquered;
 		conqueredAnim->Update(dt);
 		SDL_Rect rect = conqueredAnim->GetCurrentFrame();
-		app->render->DrawTexture(uiTex, 300, 300, &rect, 1.0f);
+		app->render->DrawTexture(uiTex, 427, 250, &rect, 1.0f);
+		
 	}
+
 	if (pickedFuel)
 	{
 		fuelIconAnim = &turnOff;
@@ -117,7 +126,7 @@ bool UI::Update(float dt)
 	//fuel icon
 	fuelIconAnim->Update(dt);
 	rect = fuelIconAnim->GetCurrentFrame();
-	app->render->DrawTexture(uiTex, app->scene->fuel_1->pos.x, app->scene->fuel_1->pos.y, &rect, 1.0f);
+	app->render->DrawTexture(uiTex, app->scene->fuel_1->position.x, app->scene->fuel_1->position.y, &rect, 1.0f);
 
 	if (app->player->won)
 	{

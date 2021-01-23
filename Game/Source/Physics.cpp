@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Point.h"
 #include "Math.h"
+#include "UI.h"
 
 #include "Log.h"
 
@@ -71,10 +72,10 @@ Planet::Planet(fPoint position, float mass, float atmosphereRadius)
 
 Fuel::Fuel(float x,float y)
 {
-	this->pos.x = x; 
-	this->pos.y = y;
+	this->position.x = x; 
+	this->position.y = y;
 	this->picked = false;
-	this->collider= app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::FUEL);
+
 
 }
 
@@ -207,7 +208,7 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
 	RectangleCollider* holdC;
 
-	if (c2->type == RectangleCollider::Type::PLANET && c1->type == RectangleCollider::Type::PLANET) return false;
+	if ((c2->type == RectangleCollider::Type::EARTH && c1->type == RectangleCollider::Type::EARTH ) || (c2->type == RectangleCollider::Type::MARS && c1->type == RectangleCollider::Type::MARS)) return false;
 
 	if (c2->type == RectangleCollider::Type::SPACESHIP &&  c1->type == RectangleCollider::Type::ASTEROID)
 	{
@@ -216,7 +217,7 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 
 	
 
-	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::PLANET || c1->type == RectangleCollider::Type::ASTEROID))
+	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS))
 	{
 		
 		holdC = c2;
@@ -261,16 +262,27 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::FUEL)
 	{
 		LOG("picked fuel");
+		c1->pendingToDelete = true;
+		app->ui->fuelIconAnim = &app->ui->turnOff;
 	}
-	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::PLANET)
+	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::EARTH && app->player->conquredEarth ==false)
 	{
 		app->player->fuel = MAX_FUEL;
+		app->player->conquredEarth = true;
 	}
+	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::MARS && app->player->conqueredMars ==false)
+	{
+		app->player->fuel = MAX_FUEL;
+		app->player->conqueredMars = true;
+	}
+
 	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::ASTEROID)
 	{
 		LOG("Crashed with asteroid");
 		app->player->Respawn();
 	}
+	
+
 
 	if (direction == 1)
 	{

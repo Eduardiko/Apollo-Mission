@@ -45,12 +45,13 @@ bool Scene::Start()
 
 	earthiPos = { 300.0f, 300.0f };
 	earth = new Planet(earthiPos, 200.0f, 200.0f);
-	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::PLANET);
+	
+	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::EARTH);
 	planetList.Add(*earth);
 
 	marsiPos = { 700.0f, 600.0f };
 	mars = new Planet(marsiPos, 100.0f, 130.0f);
-	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::PLANET);
+	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::MARS);
 	planetList.Add(*mars);
 
 	mooniPos = { 300.0f,300.0f };
@@ -63,7 +64,22 @@ bool Scene::Start()
 	asteroid->collider = app->physics->AddRectangleCollider(23, 23, RectangleCollider::ASTEROID);
 	planetList.Add(*asteroid);
 
+	cometiPos = { 800.0f,50.0f };
+	comet = new Planet(cometiPos, 0.0f, 0.0f);
+	comet->collider = app->physics->AddRectangleCollider(56, 56, RectangleCollider::ASTEROID);
+	planetList.Add(*comet);
+	
+
 	fuel_1 = new Fuel(700, 300);
+	fuel_1->collider = app->physics->AddRectangleCollider(40, 40, RectangleCollider::Type::FUEL);
+	fuel_1->collider->SetColliderPos({ 700,300 },0,0);
+
+	_comet.PushBack({ 580,69,120,120 });
+	_comet.PushBack({ 703,69,120,120 });
+	_comet.PushBack({ 837,69,120,120 });
+	_comet.speed = 3.0f;
+	cometAnim = &_comet;
+	cometCounter = 0;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -94,14 +110,19 @@ bool Scene::Update(float dt)
 {
 
 	backgroundAnim.Update(dt);
+	cometAnim->Update(dt);
 
 	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, 0.2f, moon, dt);
 	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->atmosphereRadius, 1.0f, asteroid, dt);
+
+	comet->position = CometMotion(comet->position.x, comet->position.y, 1.0f);
+	RespawnComet();
 
 	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
 	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
 	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
 	asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
+	comet->collider->SetColliderPos(comet->position, 2.0f, 2.0f);
 
 	return true;
 }
@@ -131,6 +152,9 @@ bool Scene::PostUpdate()
 	app->render->DrawTexture(planetsTex, moon->position.x, moon->position.y, &moonRect);
 	app->render->DrawTexture(planetsTex, asteroid->position.x, asteroid->position.y, &asteroidRect);
 
+	rect = cometAnim->GetCurrentFrame();
+	app->render->DrawTexture(planetsTex, comet->position.x, comet->position.y, &rect);
+
 	DrawRadius();
 
 
@@ -147,17 +171,7 @@ bool Scene::CleanUp()
 		return true;
 }
 
-fPoint Scene::CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt)
-{
-	planet->orbitalSpeed += dt*speed;
 
-	fPoint p = { 0.0f , 0.0f };
-
-	p.x = x - planet->collider->width / 2 + cos(planet->orbitalSpeed) * radius;
-	p.y = y - planet->collider->height / 2 + sin(planet->orbitalSpeed) * radius;
-
-	return p;
-}
 
 void Scene::DrawRadius()
 {
@@ -187,4 +201,38 @@ void Scene::GravityField()
 			app->player->spaceship->AddForce(force.x, force.y);
 		}
 	}
+}
+
+fPoint Scene::CometMotion(float x, float y, float speed)
+{
+	fPoint p = { 0.0f,0.0f };
+	int k = 1;
+	p.x = x - k * speed;
+	p.y = y + k * speed;
+
+	return p;
+}
+
+fPoint Scene::CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt)
+{
+	planet->orbitalSpeed += dt * speed;
+
+	fPoint p = { 0.0f , 0.0f };
+
+	p.x = x - planet->collider->width / 2 + cos(planet->orbitalSpeed) * radius;
+	p.y = y - planet->collider->height / 2 + sin(planet->orbitalSpeed) * radius;
+
+	return p;
+}
+
+void Scene::RespawnComet()
+{
+	cometCounter++;
+
+	if (cometCounter > 800)
+	{
+		cometCounter = 0;
+		comet->position = {cometiPos.x+150,cometiPos.y-150};
+	}
+
 }

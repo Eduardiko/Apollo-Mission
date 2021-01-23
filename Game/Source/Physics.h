@@ -12,9 +12,11 @@ struct RectangleCollider
 	{
 		SPACESHIP,
 		ASTEROID,
-		PLANET,
+		EARTH,
+		MARS,
 		FUEL
 	};
+	
 
 	fPoint position;
 	fPoint min;
@@ -66,6 +68,7 @@ class Planet : public PhysBody
 {
 public:
 	float orbitalSpeed;
+	
 
 public:
 	Planet(fPoint position, float mass, float atmosphereRadius);
@@ -74,7 +77,6 @@ public:
 class Fuel :public PhysBody
 {
 public:
-	fPoint pos;
 	bool picked;
 
 	Fuel(float x,float y);

@@ -9,11 +9,7 @@ struct SDL_Texture;
 class Planet;
 class Fuel;
 
-struct pickeableFuel
-{
-	fPoint pos = { 0.0f,0.0f };
 
-};
 
 class Scene : public Module
 {
@@ -43,8 +39,10 @@ public:
 	bool CleanUp();
 
 	fPoint CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt);
+	fPoint CometMotion(float x, float y, float speed);
 	void DrawRadius();
 	void GravityField();
+	void RespawnComet();
 
 private:
 	SDL_Texture* backgroundTex;
@@ -66,13 +64,20 @@ public:
 	Planet* whitePlanet;
 	Planet* moon;
 	Planet* asteroid;
+	Planet* comet;
 
 	fPoint earthiPos;
 	fPoint marsiPos;
 	fPoint mooniPos;
 	fPoint asteroidiPos;
+	fPoint cometiPos;
 
 	Fuel* fuel_1;
+
+private:
+	Animation* cometAnim;
+	Animation _comet;	
+	unsigned int cometCounter;
 
 };
 
