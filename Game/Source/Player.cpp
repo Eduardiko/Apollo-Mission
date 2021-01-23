@@ -36,9 +36,9 @@ bool Player::Start()
 	spaceshipRect = { 0,0,17,43 };
 
 	spaceship = new Spaceship(playerPos, 10.0f, 2, 100.0f,0.0f);
-	spaceship->collider = app->physics->AddRectangleCollider(30, 30, RectangleCollider::Type::SPACESHIP);
+	spaceship->collider = app->physics->AddRectangleCollider(25, 25, RectangleCollider::Type::SPACESHIP);
 
-	propulsionForce = 1500.0f;
+	propulsionForce = 2000.0f;
 	angleRot = 4.0f;
 
 	gravForce.x = 0.0f;
@@ -220,7 +220,7 @@ bool Player::Update(float dt)
 		spaceship->totalForce.y *= -0.2f;
 	}
 
-	spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
+	spaceship->collider->SetColliderPos(spaceship->position, -4.0f, 0.0f);
 
 	currentAnim->Update(dt);
 	
@@ -240,13 +240,8 @@ bool Player::PostUpdate()
 	
 	app->scene->GravityField();
 
-	//explosion offset
-	if (currentAnim == &explosionAnim)
-	{
-		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation);
-	}
-	else
-		app->render->DrawTexture(spaceshipTex, spaceship->position.x + 6.5f, spaceship->position.y-0.0f, &rect, 1.0f, spaceship->rotation);
+	app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation, 8, 14);
+
 	
 	return ret;
 }
