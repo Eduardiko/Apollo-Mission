@@ -78,6 +78,7 @@ bool Scene::Start()
 	app->audio->respawnFx = app->audio->LoadFx("Assets/Audio/Fx/respawnFx.wav");
 	app->audio->radioFx = app->audio->LoadFx("Assets/Audio/Fx/radioFx.wav");
 	app->audio->jetFx = app->audio->LoadFx("Assets/Audio/Fx/jetFx.wav");
+	app->audio->winFx = app->audio->LoadFx("Assets/Audio/Fx/winFx.wav");
 
 	return true;
 }

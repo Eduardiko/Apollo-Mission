@@ -33,9 +33,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 	void UpdateFuel();
+	void WinGame();
 
 private:
-	SDL_Texture *uiTex;
+	SDL_Texture* uiTex;
 
 	Animation* fuelAnim;
 	Animation fuel;
@@ -49,6 +50,9 @@ private:
 
 	Animation* fuelIconAnim;
 	Animation fuelIcon;
+
+	Animation* winAnim;
+	Animation win;
 
 	Animation turnOff;
 private:

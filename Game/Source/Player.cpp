@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Player.h"
+#include "UI.h"
 
 #include "Log.h"
 
@@ -85,13 +86,18 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	fuel -= fuelConsumption;
-	LOG("fuel : %f", fuel);
+	//LOG("fuel : %f", fuel);
 
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
 		LOG("Respawning spaceship");
 		Respawn();
 	}
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+	{
+		app->ui->WinGame();
+	}
+	
 
 
 	if (!isAlive)

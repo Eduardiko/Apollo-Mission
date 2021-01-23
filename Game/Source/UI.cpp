@@ -57,11 +57,15 @@ bool UI::Start()
 	fuelIcon.PushBack({ 315,143,40,45 });
 	fuelIcon.PushBack({ 356,143,40,45 });
 
+	win.PushBack({ 0,347,227,250 });
+	win.PushBack({ 240,347,227,250 });
 
 	turnOff.PushBack({ 0,0,0,0 });
 
 	popUpAnim = &popUp;
 	fuelIconAnim = &fuelIcon;
+	//winAnim = &turnOff;
+	winAnim = &win;
 	
 	return true;
 }
@@ -115,6 +119,8 @@ bool UI::Update(float dt)
 	rect = fuelIconAnim->GetCurrentFrame();
 	app->render->DrawTexture(uiTex, app->scene->fuel_1->pos.x, app->scene->fuel_1->pos.y, &rect, 1.0f);
 
+	winAnim->Update(dt);
+
 	counter++;
 	return true;
 }
@@ -132,11 +138,22 @@ bool UI::CleanUp()
 	return true;
 }
 
-void UpdateFuel()
+void UI::UpdateFuel()
 {
 	/*if (pickedFuel == true)
 	{
 		app->player->fuel = MAX_FUEL;
 	}*/
+
+}
+
+void UI::WinGame()
+{
+	LOG("Win!");
+	app->audio->PlayFx(app->audio->winFx);
+	winAnim = &win;
+
+	SDL_Rect rect = winAnim->GetCurrentFrame();
+	app->render->DrawTexture(uiTex,300, 300, &rect, 1.0f);
 
 }

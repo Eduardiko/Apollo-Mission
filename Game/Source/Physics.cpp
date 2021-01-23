@@ -216,7 +216,7 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 
 	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::PLANET || c1->type == RectangleCollider::Type::ASTEROID))
 	{
-		LOG("planet");
+		
 		holdC = c2;
 		c2 = c1;
 		c1 = holdC;

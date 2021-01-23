@@ -41,6 +41,7 @@ public:
 	int jetFx;
 	int radioFx;
 	int explosionFx;
+	int winFx;
 };
 
 #endif // __AUDIO_H__
