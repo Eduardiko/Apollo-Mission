@@ -104,6 +104,8 @@ bool Player::Update(float dt)
 		app->audio->PlayFx(app->audio->jetFx);
 		outOfFuel = true;
 		hasDied = true;
+		app->player->spaceship->health--;
+		app->player->spaceship->collider->pendingToDelete = true;
 	}
 
 	if (hasDied)
@@ -115,7 +117,7 @@ bool Player::Update(float dt)
 			requestedToRestart = true;
 	}
 	
-	if (!hasDied && !outOfFuel && !won)
+	if (!hasDied && !won)
 	{
 		if (conqueredMars && conquredEarth &&  conqueredCheese)
 			won = true;
