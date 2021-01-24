@@ -285,6 +285,9 @@ void Player::Respawn(Spaceship* s)
 		app->ui->counter = 0;
 		app->ui->popUpAnim = &app->ui->popUp;
 		
+		spaceship->collider = app->physics->AddRectangleCollider(25, 25, RectangleCollider::Type::SPACESHIP);
+		spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
+
 		accumulatedForce = { 0.0f, 0.0f };
 		s->totalForce.x = spaceship->totalForce.y = 0.0f;
 		s->forcesList.Clear();

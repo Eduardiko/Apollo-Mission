@@ -301,6 +301,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		app->ui->fuelIconAnim = &app->ui->turnOff;
 		app->audio->PlayFx(app->audio->fuelFx);
 		app->player->spaceship->health++;
+		app->player->spaceship->collider->pendingToDelete = true;
 
 		return;
 	}
@@ -319,6 +320,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 				app->player->hasDied = true;
 				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
+				app->player->spaceship->collider->pendingToDelete = true;
 			}
 			else if(velocityModule < 10.0f && app->player->conquredEarth == false)
 			{
@@ -342,6 +344,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 				app->player->hasDied = true;
 				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
+				app->player->spaceship->collider->pendingToDelete = true;
 			}
 			else if (velocityModule < 10.0f && app->player->conqueredMars == false)
 			{
@@ -365,6 +368,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 				app->player->hasDied = true;
 				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
+				app->player->spaceship->collider->pendingToDelete = true;
 			}
 		}
 	}
@@ -382,6 +386,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 				app->player->hasDied = true;
 				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
+				app->player->spaceship->collider->pendingToDelete = true;
 			}
 			else if (velocityModule < 10.0f && app->player->conqueredCheese == false)
 			{
@@ -396,7 +401,9 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 	{
 		LOG("Crashed with asteroid");
 		app->audio->PlayFx(app->audio->explosionFx);
+		app->player->spaceship->collider->pendingToDelete = true;
 		app->player->hasDied = true;
+		app->player->spaceship->health--;
 		
 	}
 
