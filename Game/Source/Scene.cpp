@@ -124,24 +124,27 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (!app->player->won)
+	{
+		backgroundAnim.Update(dt);
+		cometAnim->Update(dt);
 
-	backgroundAnim.Update(dt);
-	cometAnim->Update(dt);
+		moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->gravityRadius, 0.3f, moon, dt);
+		asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->gravityRadius, 0.5f, asteroid, dt);
+		deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->gravityRadius, 0.1f, deathStar, dt);
 
-	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->gravityRadius, 0.3f, moon, dt);
-	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->gravityRadius, 0.5f, asteroid, dt);
-	deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->gravityRadius, 0.1f, deathStar, dt);
+		comet->position = CometMotion(comet->position.x, comet->position.y, 1.0f);
+		RespawnComet();
 
-	comet->position = CometMotion(comet->position.x, comet->position.y, 1.0f);
-	RespawnComet();
-
-	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
-	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
-	cheesePlanet->collider->SetColliderPos(cheesePlanet->position, 18.0f, 18.0f);
-	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
-	deathStar->collider->SetColliderPos(deathStar->position, 2.0f, 2.0f);
-	asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
-	comet->collider->SetColliderPos(comet->position, 2.0f, 65.0f);
+		earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
+		mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
+		cheesePlanet->collider->SetColliderPos(cheesePlanet->position, 18.0f, 18.0f);
+		moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
+		deathStar->collider->SetColliderPos(deathStar->position, 2.0f, 2.0f);
+		asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
+		comet->collider->SetColliderPos(comet->position, 2.0f, 65.0f);
+	}
+	
 
 	return true;
 }

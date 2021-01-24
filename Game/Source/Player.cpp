@@ -97,6 +97,8 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
+	if (won && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) ResetAll(spaceship);
+
 	if (fuel <= 0)
 	{
 		app->audio->PlayFx(app->audio->jetFx);
@@ -115,7 +117,7 @@ bool Player::Update(float dt)
 			requestedToRestart = true;
 	}
 	
-	if (!hasDied)
+	if (!hasDied && !won)
 	{
 		if (conqueredMars && conquredEarth &&  conqueredCheese)
 			won = true;
@@ -281,7 +283,6 @@ void Player::Respawn(Spaceship* s)
 		isAlive = false;
 		requestedToRestart = false;
 		fuel = MAX_FUEL;
-		conquredEarth = conqueredMars = conqueredCheese = false;
 		won = false;
 		app->audio->PlayFx(app->audio->respawnFx);
 
@@ -297,6 +298,8 @@ void Player::Respawn(Spaceship* s)
 		s->velocity.x = spaceship->velocity.y = 0.0f;
 		s->acceleration.x = s->acceleration.y = 0.0f;
 		s->rotation = 0;
+		app->scene->fuel_1->collider = app->physics->AddRectangleCollider(40, 40, RectangleCollider::Type::FUEL);
+		app->scene->fuel_1->collider->SetColliderPos({ 700,300 }, 0, 0);
 	}
 }
 
@@ -313,4 +316,29 @@ float Player::ToRadians(float angle)
 	radians = (radians * M_PI)/180;
 
 	return radians;
+}
+
+void Player::ResetAll(Spaceship* s)
+{
+	hasDied = false;
+	isAlive = false;
+	requestedToRestart = false;
+	fuel = MAX_FUEL;
+	conquredEarth = conqueredMars = conqueredCheese = false;
+	won = false;
+	app->audio->PlayFx(app->audio->respawnFx);
+
+	app->ui->counter = 0;
+	app->ui->popUpAnim = &app->ui->popUp;
+
+	accumulatedForce = { 0.0f, 0.0f };
+	s->totalForce.x = spaceship->totalForce.y = 0.0f;
+	s->forcesList.Clear();
+	s->velocity.x = spaceship->velocity.y = 0.0f;
+	s->acceleration.x = s->acceleration.y = 0.0f;
+	s->rotation = 0;
+	spaceship->health = 3;
+	spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
+	app->scene->fuel_1->collider = app->physics->AddRectangleCollider(40, 40, RectangleCollider::Type::FUEL);
+	app->scene->fuel_1->collider->SetColliderPos({ 700,300 }, 0, 0);
 }

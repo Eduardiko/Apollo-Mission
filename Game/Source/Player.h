@@ -28,6 +28,7 @@ public:
 	void Respawn(Spaceship* s);
 	void Die();
 	float ToRadians(float angle);
+	void ResetAll(Spaceship* s);
 
 	Spaceship* spaceship;
 	fPoint gravForce;
