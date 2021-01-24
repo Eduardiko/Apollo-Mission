@@ -54,6 +54,9 @@ public:
 	Animation* winAnim;
 	Animation win;
 
+	Animation* spacebarAnim;
+	Animation spacebar;
+
 	Animation turnOff;
 private:
 	int counter;

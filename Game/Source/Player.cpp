@@ -30,6 +30,7 @@ bool Player::Start()
 {
 	
 	isAlive = true;
+	requestedToRestart = hasDied = false;
 	fuel = MAX_FUEL;
 	fuelConsumption = 1.0f / 10;
 	won = false;
@@ -88,156 +89,163 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
-	//LOG("fuel : %f", fuel);
-	if (conqueredMars && conquredEarth)
-		won = true;
-
-	
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+	if (hasDied && app->input->GetKey(SDL_SCANCODE_SPACE) ==KEY_DOWN)
 	{
-		LOG("Respawning spaceship");
-		Respawn();
-	}
-	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
-	{
-		app->ui->WinGame();
-	}
-	
-	
-
-	if (!isAlive)
-	{
-		currentAnim->Update(dt);
-		currentAnim = &explosionAnim;
+		requestedToRestart = true;
 	}
 
-	if (!isAlive && currentAnim->HasFinished())
+	if (!hasDied)
 	{
-		explosionAnim.Reset();
-		isAlive = true;
-		spaceship->position = playerPos;
-	}
+		if (conqueredMars && conquredEarth)
+			won = true;
 
-	if (fuel <= 0)
-		currentAnim = &idleAnim;
-	if (isAlive && fuel >=0)
-	{
 
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		{
-			fuel -= fuelConsumption;
-			fPoint f = { 0.0f, 0.0f };
+			LOG("Respawning spaceship");
+			Respawn();
+		}
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+		{
+			app->ui->WinGame();
+		}
 
-			float angle = ToAngles(spaceship->rotation);
 
 
-			if (angle >= 0 && angle <= 90)
+		if (!isAlive)
+		{
+			currentAnim->Update(dt);
+			currentAnim = &explosionAnim;
+		}
+
+		if (!isAlive && currentAnim->HasFinished())
+		{
+			explosionAnim.Reset();
+			isAlive = true;
+			spaceship->position = playerPos;
+		}
+
+		if (fuel <= 0)
+			currentAnim = &idleAnim;
+		if (isAlive && fuel >= 0)
+		{
+
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 			{
-				//LOG("1st quadrant");
-				f.x = abs((sin(angle) * propulsionForce));
-				f.y = -abs((cos(angle) * propulsionForce));
+				fuel -= fuelConsumption;
+				fPoint f = { 0.0f, 0.0f };
+
+				float angle = ToAngles(spaceship->rotation);
+
+
+				if (angle >= 0 && angle <= 90)
+				{
+					//LOG("1st quadrant");
+					f.x = abs((sin(angle) * propulsionForce));
+					f.y = -abs((cos(angle) * propulsionForce));
+
+				}
+				if (angle > 90 && angle < 180)
+				{
+					//LOG("2nd quadrant");
+					f.x = abs((sin(angle) * propulsionForce));
+					f.y = abs((cos(angle) * propulsionForce));
+
+				}
+				if (angle > 180 && angle < 270)
+				{
+					//LOG("3rd quadrant");
+					f.x = -abs((sin(angle) * propulsionForce));
+					f.y = abs((cos(angle) * propulsionForce));
+
+				}
+				if (angle > 270 && angle < 360)
+				{
+					//LOG("4th quadrant");
+					f.x = -abs((sin(angle) * propulsionForce));
+					f.y = -abs((cos(angle) * propulsionForce));
+
+				}
+
+				spaceship->AddForce(f.x, f.y);
+
+
+				currentAnim = &upAnim;
+
+
+				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+				{
+					fuel -= fuelConsumption / 2;
+					spaceship->rotation += angleRot;
+					currentAnim = &rightAnim;
+				}
+
+				else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+				{
+					fuel -= fuelConsumption / 2;
+					spaceship->rotation -= angleRot;
+					currentAnim = &leftAnim;
+				}
 
 			}
-			if (angle > 90 && angle < 180)
+
+			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 			{
-				//LOG("2nd quadrant");
-				f.x = abs((sin(angle) * propulsionForce));
-				f.y = abs((cos(angle) * propulsionForce));
+				float forceBreak = 1700.0f;
 
-			}
-			if (angle > 180 && angle < 270)
-			{
-				//LOG("3rd quadrant");
-				f.x = -abs((sin(angle) * propulsionForce));
-				f.y = abs((cos(angle) * propulsionForce));
-
-			}
-			if (angle > 270 && angle < 360)
-			{
-				//LOG("4th quadrant");
-				f.x = -abs((sin(angle) * propulsionForce));
-				f.y = -abs((cos(angle) * propulsionForce));
-
-			}
-
-			spaceship->AddForce(f.x, f.y);
-
-
-			currentAnim = &upAnim;
-
-
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-			{
-				fuel -= fuelConsumption/2;
-				spaceship->rotation += angleRot;
-				currentAnim = &rightAnim;
+				if (spaceship->totalForce.x < 0.0f) spaceship->totalForce.x += forceBreak;
+				if (spaceship->totalForce.x > 0.0f) spaceship->totalForce.x -= forceBreak;
+				if (spaceship->totalForce.y < 0.0f) spaceship->totalForce.y += forceBreak;
+				if (spaceship->totalForce.y > 0.0f) spaceship->totalForce.y -= forceBreak;
 			}
 
 			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 			{
-				fuel -= fuelConsumption / 2;
+
 				spaceship->rotation -= angleRot;
 				currentAnim = &leftAnim;
 			}
 
+			else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			{
+
+				spaceship->rotation += angleRot;
+				currentAnim = &rightAnim;
+			}
+
+			else
+			{
+				currentAnim = &idleAnim;
+			}
+
 		}
 
-		else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+
+		if (spaceship->position.x + spaceship->collider->width > 1200.0f)
 		{
-			float forceBreak = 1700.0f;
-
-			if (spaceship->totalForce.x < 0.0f) spaceship->totalForce.x += forceBreak;
-			if (spaceship->totalForce.x > 0.0f) spaceship->totalForce.x -= forceBreak;
-			if (spaceship->totalForce.y < 0.0f) spaceship->totalForce.y += forceBreak;
-			if (spaceship->totalForce.y > 0.0f) spaceship->totalForce.y -= forceBreak;
+			spaceship->position.x = 1200.0f - spaceship->collider->width;
+			spaceship->totalForce.x *= -0.2f;
 		}
-
-		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		if (spaceship->position.x < 0)
 		{
-
-			spaceship->rotation -= angleRot;
-			currentAnim = &leftAnim;
+			spaceship->position.x = 0;
+			spaceship->totalForce.x *= -0.2f;
 		}
-
-		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		if (spaceship->position.y + spaceship->collider->height > 700)
 		{
-
-			spaceship->rotation += angleRot;
-			currentAnim = &rightAnim;
+			spaceship->position.y = 700 - spaceship->collider->height;
+			spaceship->totalForce.y *= -0.2f;
 		}
-
-		else
+		if (spaceship->position.y < 0)
 		{
-			currentAnim = &idleAnim;
+			spaceship->position.y = 0;
+			spaceship->totalForce.y *= -0.2f;
 		}
 
-	}
+		spaceship->collider->SetColliderPos(spaceship->position, -4.0f, 0.0f);
 
-
-	if (spaceship->position.x + spaceship->collider->width > 1200.0f)
-	{
-		spaceship->position.x = 1200.0f - spaceship->collider->width;
-		spaceship->totalForce.x *= -0.2f;
+		currentAnim->Update(dt);
 	}
-	if (spaceship->position.x < 0)
-	{
-		spaceship->position.x = 0;
-		spaceship->totalForce.x *= -0.2f;
-	}
-	if (spaceship->position.y + spaceship->collider->height > 700)
-	{
-		spaceship->position.y = 700 - spaceship->collider->height;
-		spaceship->totalForce.y *= -0.2f;
-	}
-	if (spaceship->position.y < 0)
-	{
-		spaceship->position.y = 0;
-		spaceship->totalForce.y *= -0.2f;
-	}
-
-	spaceship->collider->SetColliderPos(spaceship->position, -4.0f, 0.0f);
-
-	currentAnim->Update(dt);
 	
 	return true;
 }

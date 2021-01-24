@@ -70,6 +70,8 @@ public:
 	
 	bool conquredEarth, conqueredMars;
 	bool won;
+	bool requestedToRestart;
+	bool hasDied;
 	
 };
 

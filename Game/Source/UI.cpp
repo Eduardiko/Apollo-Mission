@@ -69,8 +69,12 @@ bool UI::Start()
 
 	turnOff.PushBack({ 0,0,0,0 });
 
+	spacebar.PushBack({ 0,585,258,135 });
+	spacebar.PushBack({ 0,720,258,135 });
+
 	popUpAnim = &popUp;
 	fuelIconAnim = &fuelIcon;
+	spacebarAnim = &turnOff;
 	//winAnim = &turnOff;
 	winAnim = &win;
 	
@@ -100,6 +104,12 @@ bool UI::Update(float dt)
 			fuelAnim = &lowFuel;
 		}
 	}
+
+	if (app->player->hasDied)
+	{
+		spacebarAnim = &spacebar;
+	}
+
 	if ((app->player->conquredEarth || app->player->conqueredMars) && !app->player->won)
 	{
 		conqueredAnim = &conquered;
@@ -129,6 +139,10 @@ bool UI::Update(float dt)
 	fuelIconAnim->Update(dt);
 	rect = fuelIconAnim->GetCurrentFrame();
 	app->render->DrawTexture(uiTex, app->scene->fuel_1->position.x, app->scene->fuel_1->position.y, &rect, 1.0f);
+
+	spacebarAnim->Update(dt);
+	rect = spacebarAnim->GetCurrentFrame();
+	app->render->DrawTexture(uiTex,427,250, &rect, 1.0f);
 
 	if (app->player->won)
 	{
