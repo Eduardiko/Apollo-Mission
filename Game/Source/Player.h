@@ -68,7 +68,7 @@ public:
 	float fuel;
 	float fuelConsumption;
 	float angle;
-	bool conquredEarth, conqueredMars;
+	bool conquredEarth, conqueredMars, conqueredCheese;
 	bool won;
 	bool requestedToRestart;
 	bool hasDied;

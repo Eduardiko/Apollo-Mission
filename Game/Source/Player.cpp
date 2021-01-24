@@ -106,7 +106,7 @@ bool Player::Update(float dt)
 
 	if (!hasDied)
 	{
-		if (conqueredMars && conquredEarth)
+		if (conqueredMars && conquredEarth &&  conqueredCheese)
 			won = true;
 
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
