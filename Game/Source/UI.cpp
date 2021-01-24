@@ -108,6 +108,11 @@ bool UI::Update(float dt)
 	if (app->player->hasDied)
 	{
 		spacebarAnim = &spacebar;
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		{
+			app->player->Respawn();
+		}
 	}
 
 	if ((app->player->conquredEarth || app->player->conqueredMars) && !app->player->won)
