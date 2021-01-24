@@ -278,7 +278,11 @@ bool Player::CleanUp()
 
 void Player::Respawn(Spaceship* s)
 {
+
 	hasDied = false;
+
+	if (spaceship->health == 0) ResetAll(spaceship);
+
 	if (isAlive)
 	{
 		isAlive = false;
