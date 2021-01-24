@@ -294,7 +294,8 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::ASTEROID)
 	{
 		LOG("Crashed with asteroid");
-		app->player->Respawn();
+		app->player->hasDied = true;
+		//app->player->Respawn();
 	}
 	
 

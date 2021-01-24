@@ -89,10 +89,16 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
-	if (hasDied && app->input->GetKey(SDL_SCANCODE_SPACE) ==KEY_DOWN)
+	if (hasDied )
 	{
-		requestedToRestart = true;
+		currentAnim->Update(dt);
+		currentAnim = &explosionAnim;
+
+		if(app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+			requestedToRestart = true;
 	}
+	
+
 
 	if (!hasDied)
 	{
@@ -112,7 +118,7 @@ bool Player::Update(float dt)
 
 
 
-		if (!isAlive)
+		if (!isAlive )
 		{
 			currentAnim->Update(dt);
 			currentAnim = &explosionAnim;
@@ -279,6 +285,7 @@ bool Player::CleanUp()
 
 void Player::Respawn()
 {
+	hasDied = false;
 	if (isAlive)
 	{
 		isAlive = false;

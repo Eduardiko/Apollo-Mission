@@ -114,6 +114,8 @@ bool UI::Update(float dt)
 			app->player->Respawn();
 		}
 	}
+	else
+		spacebarAnim = &turnOff;
 
 	if ((app->player->conquredEarth || app->player->conqueredMars) && !app->player->won)
 	{
@@ -147,7 +149,7 @@ bool UI::Update(float dt)
 
 	spacebarAnim->Update(dt);
 	rect = spacebarAnim->GetCurrentFrame();
-	app->render->DrawTexture(uiTex,427,250, &rect, 1.0f);
+	app->render->DrawTexture(uiTex,427 + 20,250, &rect, 1.0f);
 
 	if (app->player->won)
 	{
