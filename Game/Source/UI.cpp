@@ -36,6 +36,7 @@ bool UI::Awake(pugi::xml_node& config)
 bool UI::Start()
 {
 	LOG("UI start");
+	LOG("%d", app->win->GetScale());
 	counter = 0;
 	pickedFuel = false;
 	EarthHaveBeenConquered = MarsaveBeenConquered = false;
@@ -71,6 +72,9 @@ bool UI::Start()
 
 	spacebar.PushBack({ 0,585,258,135 });
 	spacebar.PushBack({ 0,720,258,135 });
+
+	hearth.PushBack({ 32,866,56,45 });
+	hearth.PushBack({ 88,866,56,45 });
 
 	popUpAnim = &popUp;
 	fuelIconAnim = &fuelIcon;

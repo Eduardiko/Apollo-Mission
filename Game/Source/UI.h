@@ -57,6 +57,9 @@ public:
 	Animation* spacebarAnim;
 	Animation spacebar;
 
+	Animation* hearthAnim;
+	Animation hearth;
+
 	Animation turnOff;
 public:
 	int counter;
