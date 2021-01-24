@@ -151,6 +151,7 @@ bool Player::Update(float dt)
 			{
 				spaceship->totalForce -= accumulatedForce;
 				accumulatedForce = { 0.0f, 0.0f };
+				app->audio->PlayFx(app->audio->flameFx);
 			}
 
 			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)

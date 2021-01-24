@@ -36,6 +36,7 @@ bool Scene::Start()
 	backgroundTex = app->tex->Load("Assets/Textures/background.png");
 	planetsTex = app->tex->Load("Assets/Textures/planets.png");
 	
+	app->audio->PlayMusic("Assets/Audio/music/song.ogg");
 	
 	earthRect = { 117 , 0 , 100 , 96 };
 	whitePlanetRect = { 336 , 0 , 96 , 96 };
@@ -107,6 +108,7 @@ bool Scene::Start()
 	app->audio->jetFx = app->audio->LoadFx("Assets/Audio/Fx/jetFx.wav");
 	app->audio->winFx = app->audio->LoadFx("Assets/Audio/Fx/winFx.wav");
 	app->audio->fuelFx = app->audio->LoadFx("Assets/Audio/Fx/fuelFx.wav");
+	app->audio->flameFx = app->audio->LoadFx("Assets/Audio/Fx/flameFx.wav");
 
 	return true;
 }
