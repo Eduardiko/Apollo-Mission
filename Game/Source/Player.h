@@ -62,6 +62,7 @@ public:
 	float angleRot;
 	float forceOff;
 	float brakeForce;
+	fPoint accumulatedForce;
 
 public:
 	bool isAlive;

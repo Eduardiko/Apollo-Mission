@@ -48,7 +48,8 @@ bool Player::Start()
 	spaceship->rotation = 0.0f;
 	angle = 0.0f;
 
-	propulsionForce = 2000.0f;
+	propulsionForce = 500.0f;
+	accumulatedForce = { 0.0f, 0.0f };
 	angleRot = 4.0f;
 
 	gravForce.x = 0.0f;
@@ -105,8 +106,6 @@ bool Player::Update(float dt)
 			requestedToRestart = true;
 	}
 	
-
-
 	if (!hasDied)
 	{
 		if (conqueredMars && conquredEarth &&  conqueredCheese)
@@ -141,6 +140,12 @@ bool Player::Update(float dt)
 		if (isAlive && fuel >= 0)
 		{
 
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_UP)
+			{
+				spaceship->totalForce -= accumulatedForce;
+				accumulatedForce = { 0.0f, 0.0f };
+			}
+
 			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 			{
 
@@ -154,7 +159,9 @@ bool Player::Update(float dt)
 				f.x = sin(angle) * propulsionForce;
 				f.y = -cos(angle) * propulsionForce;
 
-				spaceship->AddForce(f.x, f.y);
+				accumulatedForce.x += f.x;
+				accumulatedForce.y += f.y;
+				spaceship->AddForce(accumulatedForce.x, accumulatedForce.y);
 
 				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 				{
@@ -186,12 +193,12 @@ bool Player::Update(float dt)
 			
 			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 			{
-				float forceBreak = 1700.0f;
+				float forceBreak = 3.0f;
 
-				if (spaceship->totalForce.x < 0.0f) spaceship->totalForce.x += forceBreak;
-				if (spaceship->totalForce.x > 0.0f) spaceship->totalForce.x -= forceBreak;
-				if (spaceship->totalForce.y < 0.0f) spaceship->totalForce.y += forceBreak;
-				if (spaceship->totalForce.y > 0.0f) spaceship->totalForce.y -= forceBreak;
+				if (spaceship->velocity.x < 0.0f) spaceship->velocity.x += forceBreak;
+				if (spaceship->velocity.x > 0.0f) spaceship->velocity.x -= forceBreak;
+				if (spaceship->velocity.y < 0.0f) spaceship->velocity.y += forceBreak;
+				if (spaceship->velocity.y > 0.0f) spaceship->velocity.y -= forceBreak;
 			}
 
 		}
@@ -200,22 +207,22 @@ bool Player::Update(float dt)
 		if (spaceship->position.x + spaceship->collider->width > 1200.0f)
 		{
 			spaceship->position.x = 1200.0f - spaceship->collider->width;
-			spaceship->totalForce.x *= -0.2f;
+			spaceship->velocity.x *= -0.2f;
 		}
 		if (spaceship->position.x < 0)
 		{
 			spaceship->position.x = 0;
-			spaceship->totalForce.x *= -0.2f;
+			spaceship->velocity.x *= -0.2f;
 		}
 		if (spaceship->position.y + spaceship->collider->height > 700)
 		{
 			spaceship->position.y = 700 - spaceship->collider->height;
-			spaceship->totalForce.y *= -0.2f;
+			spaceship->velocity.y *= -0.2f;
 		}
 		if (spaceship->position.y < 0)
 		{
 			spaceship->position.y = 0;
-			spaceship->totalForce.y *= -0.2f;
+			spaceship->velocity.y *= -0.2f;
 		}
 
 		spaceship->collider->SetColliderPos(spaceship->position, -4.0f, 0.0f);
@@ -237,7 +244,7 @@ bool Player::PostUpdate()
 	//LOG("Rotation : %f", spaceship->rotation);
 	SDL_Rect rect = currentAnim->GetCurrentFrame();
 	
-	app->scene->GravityField();
+	app->scene->FieldCheck();
 	if(currentAnim==&explosionAnim)
 		app->render->DrawTexture(spaceshipTex, spaceship->position.x-10, spaceship->position.y-7, &rect, 1.0f, spaceship->rotation, 8, 14);
 	else

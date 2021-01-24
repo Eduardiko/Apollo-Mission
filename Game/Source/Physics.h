@@ -15,6 +15,7 @@ struct RectangleCollider
 		EARTH,
 		MARS,
 		CHEESE,
+		DSTAR,
 		FUEL
 	};
 	
@@ -42,7 +43,8 @@ public:
 	
 	float mass;
 	float rotation;
-	float atmosphereRadius;
+	float gravityRadius;
+	float liftRadius;
 	
 	List<fPoint> forcesList;
 
@@ -72,7 +74,7 @@ public:
 	
 
 public:
-	Planet(fPoint position, float mass, float atmosphereRadius);
+	Planet(fPoint position, float mass, float gravityRadius, float liftRadius);
 };
 
 class Fuel :public PhysBody
@@ -95,8 +97,9 @@ public:
 	bool Update(float dt);
 	bool PostUpdate();
 
-	fPoint GravityForce(PhysBody b1, PhysBody b2);
-	fPoint Verlet(PhysBody b, float dt);
+	fPoint GravityForce(PhysBody* b1, PhysBody b2);
+	fPoint DragForce(PhysBody* b1);
+	fPoint Verlet(PhysBody* b, float dt);
 	//fPoint HydroDragForce();
 
 
@@ -107,10 +110,15 @@ public:
 
 	int direction;
 
+	float d1x;
+	float d2x;
+	float d1y;
+	float d2y;
+
 private:
 	bool debug;
-
 	float gravityConstant;
+
 };
 
 #endif // __PHYSICS_H__

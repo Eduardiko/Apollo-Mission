@@ -41,7 +41,7 @@ public:
 	fPoint CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt);
 	fPoint CometMotion(float x, float y, float speed);
 	void DrawRadius();
-	void GravityField();
+	void FieldCheck();
 	void RespawnComet();
 
 private:

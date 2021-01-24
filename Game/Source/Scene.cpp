@@ -46,37 +46,37 @@ bool Scene::Start()
 	deathstarRect = { 119,110,90,90 };
 
 	earthiPos = { 300.0f, 300.0f };
-	earth = new Planet(earthiPos, 500.0f, 200.0f);
+	earth = new Planet(earthiPos, 4000.0f, 200.0f, 0.0f);
 	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::EARTH);
 	planetList.Add(*earth);
 
 	marsiPos = { 700.0f, 600.0f };
-	mars = new Planet(marsiPos, 200.0f, 130.0f);
+	mars = new Planet(marsiPos, 2000.0f, 130.0f, 0.0f);
 	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::MARS);
 	planetList.Add(*mars);
 
 	cheeseiPos = { 970.0f, 1.0f };
-	cheesePlanet = new Planet(cheeseiPos, 600.0f, 280.0f);
+	cheesePlanet = new Planet(cheeseiPos, 5500.0f, 280.0f, 0.0f);
 	cheesePlanet->collider = app->physics->AddRectangleCollider(190, 190, RectangleCollider::Type::CHEESE);
 	planetList.Add(*cheesePlanet);
 
 	deathStariPos = { 970.0f, 1.0f };
-	deathStar = new Planet(deathStariPos, 100.0f,0.0f);
-	deathStar->collider = app->physics->AddRectangleCollider(94, 80, RectangleCollider::Type::ASTEROID);
+	deathStar = new Planet(deathStariPos, 200.0f, 0.0f, 120.0f);
+	deathStar->collider = app->physics->AddRectangleCollider(94, 80, RectangleCollider::Type::DSTAR);
 	planetList.Add(*deathStar);
 
 	mooniPos = { 300.0f,300.0f };
-	moon = new Planet(mooniPos, 20.0f, 1.0f);
+	moon = new Planet(mooniPos, 50.0f, 0.0f, 60.0f);
 	moon->collider = app->physics->AddRectangleCollider(24, 24, RectangleCollider::Type::ASTEROID);
 	planetList.Add(*moon);
 	
 	asteroidiPos = { 700.0f, 600.0f };
-	asteroid = new Planet(asteroidiPos, 0.0f, 0.0f);
+	asteroid = new Planet(asteroidiPos, 0.0f, 0.0f, 60.0f);
 	asteroid->collider = app->physics->AddRectangleCollider(23, 23, RectangleCollider::ASTEROID);
 	planetList.Add(*asteroid);
 
 	cometiPos = { 820.0f,50.0f };
-	comet = new Planet(cometiPos, 0.0f, 0.0f);
+	comet = new Planet(cometiPos, 0.0f, 0.0f, 0.0f);
 	comet->collider = app->physics->AddRectangleCollider(71, 56, RectangleCollider::ASTEROID);
 	planetList.Add(*comet);
 	
@@ -124,9 +124,9 @@ bool Scene::Update(float dt)
 	backgroundAnim.Update(dt);
 	cometAnim->Update(dt);
 
-	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, 0.2f, moon, dt);
-	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->atmosphereRadius, 1.0f, asteroid, dt);
-	deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->atmosphereRadius, 0.10f, deathStar, dt);
+	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->gravityRadius, 0.3f, moon, dt);
+	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->gravityRadius, 1.2f, asteroid, dt);
+	deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->gravityRadius, 0.10f, deathStar, dt);
 
 	comet->position = CometMotion(comet->position.x, comet->position.y, 1.0f);
 	RespawnComet();
@@ -196,11 +196,12 @@ void Scene::DrawRadius()
 
 	for (int i = 0; i < planetList.Count(); i++)
 	{
-		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].atmosphereRadius, 255, 255, 255, 80);
+		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].gravityRadius, 255, 255, 255, 80);
+		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].liftRadius, 255, 40, 0, 80);
 	}
 }
 
-void Scene::GravityField()
+void Scene::FieldCheck()
 {
 	for (int i = 0; i < planetList.Count(); i++)
 	{
@@ -212,12 +213,20 @@ void Scene::GravityField()
 		float distance;
 		distance = sqrt(pow(distancex, 2) + pow(distancey, 2));
 
-		if (distance < planetList[i].atmosphereRadius)
+		if (distance < planetList[i].gravityRadius)
 		{
 			fPoint force;
-			force = app->physics->GravityForce(*app->player->spaceship, planetList[i]);
+			force = app->physics->GravityForce(app->player->spaceship, planetList[i]);
 			app->player->spaceship->AddForce(force.x, force.y);
 		}
+
+		if (distance < planetList[i].liftRadius)
+		{
+			fPoint force;
+			force = app->physics->DragForce(app->player->spaceship);
+			app->player->spaceship->AddForce(force.x, force.y);
+		}
+
 	}
 }
 
