@@ -99,7 +99,7 @@ bool Player::Update(float dt)
 	
 	if (won && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) ResetAll(spaceship);
 
-	if (fuel <= 0)
+	if (fuel <= 0 && !hasDied)
 	{
 		app->audio->PlayFx(app->audio->jetFx);
 		outOfFuel = true;
@@ -153,7 +153,7 @@ bool Player::Update(float dt)
 			{
 				spaceship->totalForce -= accumulatedForce;
 				accumulatedForce = { 0.0f, 0.0f };
-				app->audio->PlayFx(app->audio->flameFx);
+				//app->audio->PlayFx(app->audio->flameFx);
 			}
 
 			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
