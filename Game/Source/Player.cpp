@@ -32,7 +32,7 @@ bool Player::Start()
 {
 	
 	isAlive = true;
-	requestedToRestart = hasDied = false;
+	requestedToRestart = hasDied = outOfFuel=false;
 	fuel = MAX_FUEL;
 	fuelConsumption = 1.0f / 10;
 	won = false;
@@ -93,6 +93,9 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
+	if (fuel <= 0)
+		outOfFuel = true;
+
 	if (hasDied )
 	{
 		currentAnim->Update(dt);
@@ -260,6 +263,9 @@ void Player::Respawn()
 		conquredEarth = conqueredMars = false;
 		won = false;
 		app->audio->PlayFx(app->audio->respawnFx);
+
+		app->ui->counter = 0;
+		app->ui->popUpAnim = &app->ui->popUp;
 		
 		//Reset forces
 		spaceship->totalForce.x = spaceship->totalForce.y = 0;

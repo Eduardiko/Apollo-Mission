@@ -58,7 +58,7 @@ public:
 	Animation spacebar;
 
 	Animation turnOff;
-private:
+public:
 	int counter;
 public:
 	bool pickedFuel;

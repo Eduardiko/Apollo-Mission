@@ -61,7 +61,7 @@ bool Scene::Start()
 	planetList.Add(*cheesePlanet);
 
 	deathStariPos = { 970.0f, 1.0f };
-	deathStar = new Planet(deathStariPos, 100.0f, 100.0f);
+	deathStar = new Planet(deathStariPos, 100.0f,0.0f);
 	deathStar->collider = app->physics->AddRectangleCollider(94, 80, RectangleCollider::Type::ASTEROID);
 	planetList.Add(*deathStar);
 
@@ -106,6 +106,7 @@ bool Scene::Start()
 	app->audio->radioFx = app->audio->LoadFx("Assets/Audio/Fx/radioFx.wav");
 	app->audio->jetFx = app->audio->LoadFx("Assets/Audio/Fx/jetFx.wav");
 	app->audio->winFx = app->audio->LoadFx("Assets/Audio/Fx/winFx.wav");
+	app->audio->fuelFx = app->audio->LoadFx("Assets/Audio/Fx/fuelFx.wav");
 
 	return true;
 }

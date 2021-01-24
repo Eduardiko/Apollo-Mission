@@ -72,6 +72,7 @@ public:
 	bool won;
 	bool requestedToRestart;
 	bool hasDied;
+	bool outOfFuel;
 	
 };
 

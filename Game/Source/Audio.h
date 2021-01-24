@@ -42,6 +42,7 @@ public:
 	int radioFx;
 	int explosionFx;
 	int winFx;
+	int fuelFx;
 };
 
 #endif // __AUDIO_H__

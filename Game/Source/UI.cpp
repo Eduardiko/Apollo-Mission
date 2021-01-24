@@ -105,7 +105,7 @@ bool UI::Update(float dt)
 		}
 	}
 
-	if (app->player->hasDied)
+	if (app->player->hasDied || app->player->outOfFuel)
 	{
 		spacebarAnim = &spacebar;
 
