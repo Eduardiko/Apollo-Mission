@@ -32,7 +32,7 @@ bool Player::Start()
 {
 	
 	isAlive = true;
-	requestedToRestart = hasDied = outOfFuel=false;
+	requestedToRestart = hasDied = outOfFuel = false;
 	fuel = MAX_FUEL;
 	fuelConsumption = 1.0f / 10;
 	won = false;
@@ -40,11 +40,12 @@ bool Player::Start()
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	explosionsTex = spaceshipTex;
 
-	playerPos = { 100.0f, 300.0f };
+	playerPos = { 80.0f, 280.0f };
 	spaceshipRect = { 0,0,17,43 };
 
 	spaceship = new Spaceship(playerPos, 10.0f, 3, 100.0f,0.0f);
 	spaceship->collider = app->physics->AddRectangleCollider(25, 25, RectangleCollider::Type::SPACESHIP);
+	spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
 	spaceship->rotation = 0.0f;
 	angle = 0.0f;
 
@@ -267,7 +268,7 @@ void Player::Respawn()
 	{
 		isAlive = false;
 		fuel = MAX_FUEL;
-		conquredEarth = conqueredMars = false;
+		conquredEarth = conqueredMars = conqueredCheese = false;
 		won = false;
 		app->audio->PlayFx(app->audio->respawnFx);
 
