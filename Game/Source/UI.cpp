@@ -113,6 +113,12 @@ bool UI::Update(float dt)
 		app->render->DrawTexture(uiTex, 10, 25, &hearth_3, 1.0f);
 		break;
 	}
+	case(4):
+	{
+		app->render->DrawTexture(uiTex, 10, 25, &hearth_4, 1.0f);
+		break;
+	}
+	
 
 	}
 
