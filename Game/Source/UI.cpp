@@ -100,7 +100,7 @@ bool UI::Update(float dt)
 			fuelAnim = &lowFuel;
 		}
 	}
-	if (app->player->conquredEarth)
+	if ((app->player->conquredEarth || app->player->conqueredMars) && !app->player->won)
 	{
 		conqueredAnim = &conquered;
 		conqueredAnim->Update(dt);
@@ -108,6 +108,8 @@ bool UI::Update(float dt)
 		app->render->DrawTexture(uiTex, 427, 250, &rect, 1.0f);
 		
 	}
+
+
 
 	if (pickedFuel)
 	{

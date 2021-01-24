@@ -274,6 +274,9 @@ void Player::Respawn()
 	if (isAlive)
 	{
 		isAlive = false;
+		fuel = MAX_FUEL;
+		conquredEarth = conqueredMars = false;
+		won = false;
 		app->audio->PlayFx(app->audio->respawnFx);
 		
 		//Reset forces

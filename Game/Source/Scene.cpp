@@ -64,9 +64,9 @@ bool Scene::Start()
 	asteroid->collider = app->physics->AddRectangleCollider(23, 23, RectangleCollider::ASTEROID);
 	planetList.Add(*asteroid);
 
-	cometiPos = { 800.0f,50.0f };
+	cometiPos = { 820.0f,50.0f };
 	comet = new Planet(cometiPos, 0.0f, 0.0f);
-	comet->collider = app->physics->AddRectangleCollider(56, 56, RectangleCollider::ASTEROID);
+	comet->collider = app->physics->AddRectangleCollider(71, 56, RectangleCollider::ASTEROID);
 	planetList.Add(*comet);
 	
 
@@ -122,7 +122,7 @@ bool Scene::Update(float dt)
 	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
 	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
 	asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
-	comet->collider->SetColliderPos(comet->position, 2.0f, 2.0f);
+	comet->collider->SetColliderPos(comet->position, 2.0f, 65.0f);
 
 	return true;
 }
