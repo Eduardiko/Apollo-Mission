@@ -281,7 +281,11 @@ void Player::Respawn(Spaceship* s)
 
 	hasDied = false;
 
-	if (spaceship->health == 0) ResetAll(spaceship);
+	if (spaceship->health == 0)
+	{
+		spaceship->collider = app->physics->AddRectangleCollider(25, 25, RectangleCollider::Type::SPACESHIP);
+		ResetAll(spaceship);
+	}
 
 	if (isAlive)
 	{
