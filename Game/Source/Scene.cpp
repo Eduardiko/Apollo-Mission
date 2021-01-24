@@ -56,7 +56,7 @@ bool Scene::Start()
 	planetList.Add(*mars);
 
 	cheeseiPos = { 970.0f, 1.0f };
-	cheesePlanet = new Planet(cheeseiPos, 5500.0f, 280.0f, 0.0f);
+	cheesePlanet = new Planet(cheeseiPos, 7500.0f, 280.0f, 0.0f);
 	cheesePlanet->collider = app->physics->AddRectangleCollider(190, 190, RectangleCollider::Type::CHEESE);
 	planetList.Add(*cheesePlanet);
 
@@ -125,8 +125,8 @@ bool Scene::Update(float dt)
 	cometAnim->Update(dt);
 
 	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->gravityRadius, 0.3f, moon, dt);
-	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->gravityRadius, 1.2f, asteroid, dt);
-	deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->gravityRadius, 0.10f, deathStar, dt);
+	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->gravityRadius, 0.5f, asteroid, dt);
+	deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->gravityRadius, 0.1f, deathStar, dt);
 
 	comet->position = CometMotion(comet->position.x, comet->position.y, 1.0f);
 	RespawnComet();
@@ -242,12 +242,12 @@ fPoint Scene::CometMotion(float x, float y, float speed)
 
 fPoint Scene::CircularMotion(float x, float y, float radius, float speed, Planet* planet, float dt)
 {
-	planet->orbitalSpeed += dt * speed;
+	planet->orbitalSpeed += speed;
 
 	fPoint p = { 0.0f , 0.0f };
 
-	p.x = x - planet->collider->width / 2 + cos(planet->orbitalSpeed) * radius;
-	p.y = y - planet->collider->height / 2 + sin(planet->orbitalSpeed) * radius;
+	p.x = x - planet->collider->width / 2 + cos(planet->orbitalSpeed * 0.02f)  * radius;
+	p.y = y - planet->collider->height / 2 + sin(planet->orbitalSpeed * 0.02f)  * radius;
 
 	return p;
 }

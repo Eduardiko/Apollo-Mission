@@ -100,8 +100,6 @@ public:
 	fPoint GravityForce(PhysBody* b1, PhysBody b2);
 	fPoint DragForce(PhysBody* b1);
 	fPoint Verlet(PhysBody* b, float dt);
-	//fPoint HydroDragForce();
-
 
 	RectangleCollider* colliderList[50] = { nullptr };
 	RectangleCollider* AddRectangleCollider(int width, int height, RectangleCollider::Type type);
