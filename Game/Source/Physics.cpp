@@ -137,7 +137,6 @@ bool Physics::Update(float dt)
 
 	app->player->spaceship->forcesList.Clear();
 		
-
 	app->player->spaceship->position = Verlet(app->player->spaceship, dt);
 
 	app->player->spaceship->totalForce.x = 0.0f;
@@ -307,45 +306,42 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::EARTH )
 	{
 		
-
-		int x=abs(app->player->spaceship->totalForce.x);
-		int y=abs(app->player->spaceship->totalForce.y);
-		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+		int x=abs(app->player->spaceship->velocity.x);
+		int y=abs(app->player->spaceship->velocity.y);
+		float velocityModule = sqrt(x ^ 2 + y ^ 2);
 
 		if (app->player->hasDied == false)
 		{
-			if (currentTotalForce > 300.0f)
+			if (velocityModule > 10.0f)
 			{
 				app->player->hasDied = true;
-				
+				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
 			}
-			else if(currentTotalForce < 300.0f && app->player->conquredEarth == false)
+			else if(velocityModule < 10.0f && app->player->conquredEarth == false)
 			{
 				app->player->fuel = MAX_FUEL;
 				app->player->conquredEarth = true;
 				app->audio->PlayFx(app->audio->radioFx);
 			}
 		}
-
-		
 	}
 
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::MARS )
 	{
-		int x = abs(app->player->spaceship->totalForce.x);
-		int y = abs(app->player->spaceship->totalForce.y);
-		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+		int x = abs(app->player->spaceship->velocity.x);
+		int y = abs(app->player->spaceship->velocity.y);
+		float velocityModule = sqrt(x ^ 2 + y ^ 2);
 
 		if (app->player->hasDied == false)
 		{
-			if (currentTotalForce > 300.0f)
+			if (velocityModule > 10.0f)
 			{
 				app->player->hasDied = true;
-
+				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
 			}
-			else if (currentTotalForce < 300.0f && app->player->conqueredMars == false)
+			else if (velocityModule < 10.0f && app->player->conqueredMars == false)
 			{
 				app->player->fuel = MAX_FUEL;
 				app->player->conqueredMars = true;
@@ -356,16 +352,16 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::DSTAR)
 	{
-		int x = abs(app->player->spaceship->totalForce.x);
-		int y = abs(app->player->spaceship->totalForce.y);
-		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+		int x = abs(app->player->spaceship->velocity.x);
+		int y = abs(app->player->spaceship->velocity.y);
+		float velocityModule = sqrt(x ^ 2 + y ^ 2);
 
 		if (app->player->hasDied == false)
 		{
-			if (currentTotalForce > 300.0f)
+			if (velocityModule > 10.0f)
 			{
 				app->player->hasDied = true;
-
+				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
 			}
 		}
@@ -373,19 +369,19 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::CHEESE)
 	{
-		int x = abs(app->player->spaceship->totalForce.x);
-		int y = abs(app->player->spaceship->totalForce.y);
-		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+		int x = abs(app->player->spaceship->velocity.x);
+		int y = abs(app->player->spaceship->velocity.y);
+		float velocityModule = sqrt(x ^ 2 + y ^ 2);
 
 		if (app->player->hasDied == false)
 		{
-			if (currentTotalForce > 300.0f)
+			if (velocityModule > 10.0f)
 			{
 				app->player->hasDied = true;
-
+				app->player->spaceship->health--;
 				app->audio->PlayFx(app->audio->explosionFx);
 			}
-			else if (currentTotalForce < 300.0f && app->player->conqueredCheese == false)
+			else if (velocityModule < 10.0f && app->player->conqueredCheese == false)
 			{
 				app->player->fuel = MAX_FUEL;
 				app->player->conqueredCheese = true;
@@ -401,8 +397,6 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		app->player->hasDied = true;
 		
 	}
-
-	int subs = 2;
 
 	if (direction == 1)
 	{

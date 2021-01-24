@@ -115,7 +115,7 @@ bool Player::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		{
 			LOG("Respawning spaceship");
-			Respawn();
+			Respawn(spaceship);
 		}
 		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 		{
@@ -251,6 +251,9 @@ bool Player::PostUpdate()
 	else
 		app->render->DrawTexture(spaceshipTex, spaceship->position.x, spaceship->position.y, &rect, 1.0f, spaceship->rotation, 8, 14);
 
+	if (requestedToRestart)
+		Respawn(spaceship);
+
 	return ret;
 }
 
@@ -261,12 +264,13 @@ bool Player::CleanUp()
 	return true;
 }
 
-void Player::Respawn()
+void Player::Respawn(Spaceship* s)
 {
 	hasDied = false;
 	if (isAlive)
 	{
 		isAlive = false;
+		requestedToRestart = false;
 		fuel = MAX_FUEL;
 		conquredEarth = conqueredMars = conqueredCheese = false;
 		won = false;
@@ -275,9 +279,12 @@ void Player::Respawn()
 		app->ui->counter = 0;
 		app->ui->popUpAnim = &app->ui->popUp;
 		
-		//Reset forces
-		spaceship->totalForce.x = spaceship->totalForce.y = 0;
-		spaceship->rotation = 0;
+		accumulatedForce = { 0.0f, 0.0f };
+		s->totalForce.x = spaceship->totalForce.y = 0.0f;
+		s->forcesList.Clear();
+		s->velocity.x = spaceship->velocity.y = 0.0f;
+		s->acceleration.x = s->acceleration.y = 0.0f;
+		s->rotation = 0;
 	}
 }
 

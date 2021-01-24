@@ -25,7 +25,7 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
-	void Respawn();
+	void Respawn(Spaceship* s);
 	void Die();
 	float ToRadians(float angle);
 
