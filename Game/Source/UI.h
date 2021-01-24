@@ -57,10 +57,12 @@ public:
 	Animation* spacebarAnim;
 	Animation spacebar;
 
-	Animation* hearthAnim;
-	Animation hearth;
-
 	Animation turnOff;
+
+	SDL_Rect hearth_1;
+	SDL_Rect hearth_2;
+	SDL_Rect hearth_3;
+	SDL_Rect hearth_4;
 public:
 	int counter;
 public:

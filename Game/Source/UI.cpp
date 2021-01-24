@@ -73,8 +73,10 @@ bool UI::Start()
 	spacebar.PushBack({ 0,585,258,135 });
 	spacebar.PushBack({ 0,720,258,135 });
 
-	hearth.PushBack({ 32,866,56,45 });
-	hearth.PushBack({ 88,866,56,45 });
+	hearth_1 = { 32,866,260,45 };
+	hearth_2 = { 32,912,120,45 };
+	hearth_3 = { 32,958,183,45 };
+	hearth_4 = { 32,1004,260,45 };
 
 	popUpAnim = &popUp;
 	fuelIconAnim = &fuelIcon;
@@ -94,6 +96,26 @@ bool UI::PreUpdate()
 
 bool UI::Update(float dt)
 {
+	switch (app->player->lives)
+	{
+	case(1):
+	{
+		app->render->DrawTexture(uiTex, 10, 25, &hearth_1, 1.0f);
+		break;
+	}
+	case(2):
+	{
+		app->render->DrawTexture(uiTex, 10, 25, &hearth_2, 1.0f);
+		break;
+	}
+	case(3):
+	{
+		app->render->DrawTexture(uiTex, 10, 25, &hearth_3, 1.0f);
+		break;
+	}
+
+	}
+
 	if(counter > 350)
 		popUpAnim = &turnOff;
 	
@@ -144,7 +166,7 @@ bool UI::Update(float dt)
 
 	fuelAnim->Update(dt);
 	rect = fuelAnim->GetCurrentFrame();
-	app->render->DrawTexture(uiTex, 10, 10, &rect, 1.0f);
+	app->render->DrawTexture(uiTex, 10+260, 10, &rect, 1.0f);
 
 	//fuel icon
 	fuelIconAnim->Update(dt);
@@ -192,7 +214,7 @@ void UI::UpdateFuel()
 	}
 	if (app->player->fuel > 0)
 	{
-		SDL_Rect rect = { 90,35,app->player->fuel * 2.5f,30 };
+		SDL_Rect rect = { 90+260,35,app->player->fuel * 2.5f,30 };
 		if (app->player->fuel > 45)
 			app->render->DrawRectangle(rect, 0, 255, 0, 255);
 		else if (app->player->fuel < 45 && app->player->fuel > 15)
