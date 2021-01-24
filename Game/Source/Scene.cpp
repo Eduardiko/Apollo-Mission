@@ -36,6 +36,7 @@ bool Scene::Start()
 	backgroundTex = app->tex->Load("Assets/Textures/background.png");
 	planetsTex = app->tex->Load("Assets/Textures/planets.png");
 	
+	app->audio->PlayMusic("Assets/Audio/song.ogg");
 	
 	earthRect = { 117 , 0 , 100 , 96 };
 	whitePlanetRect = { 336 , 0 , 96 , 96 };
