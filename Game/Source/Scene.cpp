@@ -44,13 +44,13 @@ bool Scene::Start()
 	asteroidRect = { 192,253,27,27 };
 
 	earthiPos = { 300.0f, 300.0f };
-	earth = new Planet(earthiPos, 200.0f, 200.0f);
+	earth = new Planet(earthiPos, 500.0f, 200.0f);
 	
 	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::EARTH);
 	planetList.Add(*earth);
 
 	marsiPos = { 700.0f, 600.0f };
-	mars = new Planet(marsiPos, 100.0f, 130.0f);
+	mars = new Planet(marsiPos, 200.0f, 130.0f);
 	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::MARS);
 	planetList.Add(*mars);
 
@@ -178,7 +178,7 @@ void Scene::DrawRadius()
 
 	for (int i = 0; i < planetList.Count(); i++)
 	{
-		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].atmosphereRadius, 255, 255, 255, 50);
+		app->render->DrawCircle(planetList[i].collider->center.x, planetList[i].collider->center.y, planetList[i].atmosphereRadius, 255, 255, 255, 80);
 	}
 }
 

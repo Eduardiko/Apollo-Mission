@@ -144,6 +144,17 @@ bool Physics::Update(float dt)
 
 bool Physics::PostUpdate()
 {
+
+	// Remove all colliders scheduled for deletion
+	for (uint i = 0; i < 50; ++i)
+	{
+		if (colliderList[i] != nullptr && colliderList[i]->pendingToDelete == true)
+		{
+			delete colliderList[i];
+			colliderList[i] = nullptr;
+		}
+	}
+
 	if (debug)
 	{
 		for (uint i = 0; i < 50; ++i)
@@ -181,10 +192,10 @@ fPoint Physics::GravityForce(PhysBody b1, PhysBody b2)
 	force.x = i * gravityConstant * b1.mass * b2.mass * cos(angle)/ pow(hypotenuse, 2);
 	force.y = -gravityConstant * b1.mass * b2.mass * sin(angle)/ pow(hypotenuse, 2);
 
-	if (force.x > 1000.0f) force.x = 1000.0f;
-	if (force.x < -1000.0f) force.x = -1000.0f;
-	if (force.y > 1000.0f) force.y = 1000.0f;
-	if (force.y < -1000.0f) force.y = -1000.0f;
+	if (force.x > 700.0f) force.x = 700.0f;
+	if (force.x < -700.0f) force.x = -700.0f;
+	if (force.y > 700.0f) force.y = 700.0f;
+	if (force.y < -700.0f) force.y = -700.0f;
 
 	return force;
 }
@@ -208,15 +219,6 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
 	RectangleCollider* holdC;
 
-	if ((c2->type == RectangleCollider::Type::EARTH && c1->type == RectangleCollider::Type::EARTH ) || (c2->type == RectangleCollider::Type::MARS && c1->type == RectangleCollider::Type::MARS)) return false;
-
-	if (c2->type == RectangleCollider::Type::SPACESHIP &&  c1->type == RectangleCollider::Type::ASTEROID)
-	{
-		//app->player->Respawn();
-	}
-
-	
-
 	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS))
 	{
 		
@@ -224,7 +226,6 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 		c2 = c1;
 		c1 = holdC;
 	}
-
 	
 	c1->min.x = c1->position.x;
 	c1->min.y = c1->position.y + c1->height;
@@ -258,25 +259,38 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
 	int subs = 1;
-	
-	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::FUEL)
+
+	RectangleCollider* holdC;
+
+	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS || c1->type == RectangleCollider::Type::FUEL))
+	{
+
+		holdC = c2;
+		c2 = c1;
+		c1 = holdC;
+	}
+
+	if (c1->type != RectangleCollider::Type::SPACESHIP) return;
+
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::FUEL)
 	{
 		LOG("picked fuel");
-		c1->pendingToDelete = true;
+		c2->pendingToDelete = true;
+		app->player->fuel = MAX_FUEL;
 		app->ui->fuelIconAnim = &app->ui->turnOff;
 	}
-	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::EARTH && app->player->conquredEarth ==false)
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::EARTH && app->player->conquredEarth ==false)
 	{
 		app->player->fuel = MAX_FUEL;
 		app->player->conquredEarth = true;
 	}
-	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::MARS && app->player->conqueredMars ==false)
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::MARS && app->player->conqueredMars ==false)
 	{
 		app->player->fuel = MAX_FUEL;
 		app->player->conqueredMars = true;
 	}
 
-	if (c2->type == RectangleCollider::Type::SPACESHIP && c1->type == RectangleCollider::Type::ASTEROID)
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::ASTEROID)
 	{
 		LOG("Crashed with asteroid");
 		app->player->Respawn();
