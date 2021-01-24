@@ -124,6 +124,7 @@ bool Player::Update(float dt)
 
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		{
+			spaceship->collider->pendingToDelete = true;
 			LOG("Respawning spaceship");
 			Respawn(spaceship);
 		}
