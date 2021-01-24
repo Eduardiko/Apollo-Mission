@@ -278,6 +278,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		c2->pendingToDelete = true;
 		app->player->fuel = MAX_FUEL;
 		app->ui->fuelIconAnim = &app->ui->turnOff;
+		return;
 	}
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::EARTH && app->player->conquredEarth ==false)
 	{
