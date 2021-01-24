@@ -104,7 +104,9 @@ bool Scene::Start()
 
 	app->audio->explosionFx = app->audio->LoadFx("Assets/Audio/Fx/explosionFx.wav");
 	app->audio->respawnFx = app->audio->LoadFx("Assets/Audio/Fx/respawnFx.wav");
-	app->audio->radioFx = app->audio->LoadFx("Assets/Audio/Fx/radioFx.wav");
+	app->audio->radioFx1 = app->audio->LoadFx("Assets/Audio/Fx/radioFx1.wav");
+	app->audio->radioFx2 = app->audio->LoadFx("Assets/Audio/Fx/radioFx2.wav");
+	app->audio->radioFx3 = app->audio->LoadFx("Assets/Audio/Fx/radioFx3.wav");
 	app->audio->jetFx = app->audio->LoadFx("Assets/Audio/Fx/jetFx.wav");
 	app->audio->winFx = app->audio->LoadFx("Assets/Audio/Fx/winFx.wav");
 	app->audio->fuelFx = app->audio->LoadFx("Assets/Audio/Fx/fuelFx.wav");

@@ -39,7 +39,9 @@ private:
 public:
 	int respawnFx;
 	int jetFx;
-	int radioFx;
+	int radioFx1;
+	int radioFx2;
+	int radioFx3;
 	int explosionFx;
 	int winFx;
 	int fuelFx;

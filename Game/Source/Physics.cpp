@@ -301,7 +301,6 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		app->ui->fuelIconAnim = &app->ui->turnOff;
 		app->audio->PlayFx(app->audio->fuelFx);
 		app->player->spaceship->health++;
-		app->player->spaceship->collider->pendingToDelete = true;
 
 		return;
 	}
@@ -326,7 +325,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 			{
 				app->player->fuel = MAX_FUEL;
 				app->player->conquredEarth = true;
-				app->audio->PlayFx(app->audio->radioFx);
+				app->audio->PlayFx(app->audio->radioFx1);
 			}
 		}
 	}
@@ -350,7 +349,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 			{
 				app->player->fuel = MAX_FUEL;
 				app->player->conqueredMars = true;
-				app->audio->PlayFx(app->audio->radioFx);
+				app->audio->PlayFx(app->audio->radioFx2);
 			}
 		}
 	}
@@ -392,7 +391,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 			{
 				app->player->fuel = MAX_FUEL;
 				app->player->conqueredCheese = true;
-				app->audio->PlayFx(app->audio->radioFx);
+				app->audio->PlayFx(app->audio->radioFx3);
 			}
 		}
 	}

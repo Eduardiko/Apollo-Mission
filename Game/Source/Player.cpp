@@ -40,7 +40,7 @@ bool Player::Start()
 	spaceshipTex = app->tex->Load("Assets/Textures/spaceship.png");
 	explosionsTex = spaceshipTex;
 
-	playerPos = { 80.0f, 280.0f };
+	playerPos = { 40.0f, 230.0f };
 	spaceshipRect = { 0,0,17,43 };
 
 	spaceship = new Spaceship(playerPos, 10.0f, 3, 100.0f,0.0f);
@@ -106,7 +106,7 @@ bool Player::Update(float dt)
 	}
 		
 
-	if (hasDied )
+	if (hasDied)
 	{
 		currentAnim->Update(dt);
 		currentAnim = &explosionAnim;
