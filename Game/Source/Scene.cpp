@@ -32,7 +32,7 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-
+	gameIsOver = false;
 	backgroundTex = app->tex->Load("Assets/Textures/background.png");
 	planetsTex = app->tex->Load("Assets/Textures/planets.png");
 	

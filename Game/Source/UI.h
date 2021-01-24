@@ -57,6 +57,9 @@ public:
 	Animation* spacebarAnim;
 	Animation spacebar;
 
+	Animation* gameOverAnim;
+	Animation gameOver;
+
 	Animation turnOff;
 
 	SDL_Rect hearth_1;

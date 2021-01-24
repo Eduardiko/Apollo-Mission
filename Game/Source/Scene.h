@@ -84,6 +84,8 @@ private:
 	Animation* cometAnim;
 	Animation _comet;	
 	unsigned int cometCounter;
+public: 
+	bool gameIsOver;
 
 };
 

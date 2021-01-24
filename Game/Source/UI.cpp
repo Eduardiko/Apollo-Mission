@@ -73,6 +73,10 @@ bool UI::Start()
 	spacebar.PushBack({ 0,585,258,135 });
 	spacebar.PushBack({ 0,720,258,135 });
 
+	gameOver.PushBack({ 520,0,350,90 });
+	gameOver.PushBack({ 520,90,350,90 });
+	gameOverAnim = &turnOff;
+
 	hearth_1 = { 32,866,260,45 };
 	hearth_2 = { 32,912,260,45 };
 	hearth_3 = { 32,958,260,45 };
@@ -98,6 +102,17 @@ bool UI::PreUpdate()
 
 bool UI::Update(float dt)
 {
+
+	if (app->scene->gameIsOver)
+	{
+		gameOverAnim = &gameOver;
+		spacebarAnim->Update(dt);
+		SDL_Rect rect = gameOverAnim->GetCurrentFrame();
+		app->render->DrawTexture(uiTex, 427 + 20, 250, &rect, 1.0f);
+
+		app->player->ResetAll(app->player->spaceship);
+	}
+
 	app->render->DrawTexture(uiTex, 0, 0, &_interface, 0.0f);
 	switch (app->player->spaceship->health)
 	{
