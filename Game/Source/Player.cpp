@@ -10,6 +10,8 @@
 
 #include "Log.h"
 
+#define M_PI 3.14159265358979323846f
+
 Player::Player()
 {
 	name.Create("player");
@@ -43,6 +45,8 @@ bool Player::Start()
 
 	spaceship = new Spaceship(playerPos, 10.0f, 2, 100.0f,0.0f);
 	spaceship->collider = app->physics->AddRectangleCollider(25, 25, RectangleCollider::Type::SPACESHIP);
+	spaceship->rotation = 0.0f;
+	angle = 0.0f;
 
 	propulsionForce = 2000.0f;
 	angleRot = 4.0f;
@@ -105,7 +109,6 @@ bool Player::Update(float dt)
 		if (conqueredMars && conquredEarth)
 			won = true;
 
-
 		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		{
 			LOG("Respawning spaceship");
@@ -115,8 +118,6 @@ bool Player::Update(float dt)
 		{
 			app->ui->WinGame();
 		}
-
-
 
 		if (!isAlive )
 		{
@@ -133,69 +134,54 @@ bool Player::Update(float dt)
 
 		if (fuel <= 0)
 			currentAnim = &idleAnim;
+
 		if (isAlive && fuel >= 0)
 		{
 
 			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 			{
+
 				fuel -= fuelConsumption;
-				fPoint f = { 0.0f, 0.0f };
-
-				float angle = ToAngles(spaceship->rotation);
-
-
-				if (angle >= 0 && angle <= 90)
-				{
-					//LOG("1st quadrant");
-					f.x = abs((sin(angle) * propulsionForce));
-					f.y = -abs((cos(angle) * propulsionForce));
-
-				}
-				if (angle > 90 && angle < 180)
-				{
-					//LOG("2nd quadrant");
-					f.x = abs((sin(angle) * propulsionForce));
-					f.y = abs((cos(angle) * propulsionForce));
-
-				}
-				if (angle > 180 && angle < 270)
-				{
-					//LOG("3rd quadrant");
-					f.x = -abs((sin(angle) * propulsionForce));
-					f.y = abs((cos(angle) * propulsionForce));
-
-				}
-				if (angle > 270 && angle < 360)
-				{
-					//LOG("4th quadrant");
-					f.x = -abs((sin(angle) * propulsionForce));
-					f.y = -abs((cos(angle) * propulsionForce));
-
-				}
-
-				spaceship->AddForce(f.x, f.y);
-
-
 				currentAnim = &upAnim;
 
+				fPoint f = { 0.0f, 0.0f };
+
+				angle = ToRadians(spaceship->rotation);
+
+				f.x = sin(angle) * propulsionForce;
+				f.y = -cos(angle) * propulsionForce;
+
+				spaceship->AddForce(f.x, f.y);
 
 				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 				{
 					fuel -= fuelConsumption / 2;
-					spaceship->rotation += angleRot;
 					currentAnim = &rightAnim;
+					spaceship->rotation += angleRot;
+					
 				}
-
-				else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+				if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 				{
 					fuel -= fuelConsumption / 2;
-					spaceship->rotation -= angleRot;
 					currentAnim = &leftAnim;
+					spaceship->rotation -= angleRot;
+					
 				}
 
+			} else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			{
+				spaceship->rotation -= angleRot;
+				currentAnim = &leftAnim;
+			} else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			{
+				spaceship->rotation += angleRot;
+				currentAnim = &rightAnim;
+			} else
+			{
+				currentAnim = &idleAnim;
 			}
-
-			else if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+			
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 			{
 				float forceBreak = 1700.0f;
 
@@ -205,28 +191,9 @@ bool Player::Update(float dt)
 				if (spaceship->totalForce.y > 0.0f) spaceship->totalForce.y -= forceBreak;
 			}
 
-			else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-			{
-
-				spaceship->rotation -= angleRot;
-				currentAnim = &leftAnim;
-			}
-
-			else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-			{
-
-				spaceship->rotation += angleRot;
-				currentAnim = &rightAnim;
-			}
-
-			else
-			{
-				currentAnim = &idleAnim;
-			}
-
 		}
 
-
+		//Map Limits
 		if (spaceship->position.x + spaceship->collider->width > 1200.0f)
 		{
 			spaceship->position.x = 1200.0f - spaceship->collider->width;
@@ -306,16 +273,11 @@ void Player::Die()
 
 }
 
-float Player::ToAngles(float rot)
+float Player::ToRadians(float angle)
 {
-	int degrees = rot;
+	float radians = angle;
 
-	degrees = degrees % 360;
+	radians = (radians * M_PI)/180;
 
-	if (degrees < 0)
-	{
-		degrees += 360;
-	}
-
-	return degrees;
+	return radians;
 }

@@ -27,7 +27,7 @@ public:
 
 	void Respawn();
 	void Die();
-	float ToAngles(float rot);
+	float ToRadians(float angle);
 
 	Spaceship* spaceship;
 	fPoint gravForce;
@@ -67,7 +67,7 @@ public:
 	bool isAlive;
 	float fuel;
 	float fuelConsumption;
-	
+	float angle;
 	bool conquredEarth, conqueredMars;
 	bool won;
 	bool requestedToRestart;
