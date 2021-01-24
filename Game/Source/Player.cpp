@@ -97,6 +97,7 @@ bool Player::Update(float dt)
 	
 	if (fuel <= 0)
 	{
+		app->audio->PlayFx(app->audio->jetFx);
 		outOfFuel = true;
 		fuel = MAX_FUEL;
 		spaceship->health--;

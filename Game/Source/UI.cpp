@@ -78,6 +78,8 @@ bool UI::Start()
 	hearth_3 = { 32,958,260,45 };
 	hearth_4 = { 32,1004,260,45 };
 
+	_interface = { 0,1211,1000,200 };
+
 	popUpAnim = &popUp;
 	fuelIconAnim = &fuelIcon;
 	spacebarAnim = &turnOff;
@@ -96,6 +98,7 @@ bool UI::PreUpdate()
 
 bool UI::Update(float dt)
 {
+	app->render->DrawTexture(uiTex, 0, 0, &_interface, 0.0f);
 	switch (app->player->spaceship->health)
 	{
 	case(1):

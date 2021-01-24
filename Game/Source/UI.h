@@ -63,6 +63,8 @@ public:
 	SDL_Rect hearth_2;
 	SDL_Rect hearth_3;
 	SDL_Rect hearth_4;
+
+	SDL_Rect _interface;
 public:
 	int counter;
 public:
