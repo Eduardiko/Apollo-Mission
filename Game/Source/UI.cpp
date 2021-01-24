@@ -36,6 +36,7 @@ bool UI::Awake(pugi::xml_node& config)
 bool UI::Start()
 {
 	LOG("UI start");
+	LOG("%d", app->win->GetScale());
 	counter = 0;
 	pickedFuel = false;
 	EarthHaveBeenConquered = MarsaveBeenConquered = false;
