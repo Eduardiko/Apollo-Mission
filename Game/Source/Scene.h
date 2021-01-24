@@ -56,21 +56,27 @@ public:
 	SDL_Rect earthRect;
 	SDL_Rect whitePlanetRect;
 	SDL_Rect marsRect;
+	SDL_Rect cheeseRect;
 	SDL_Rect moonRect;
 	SDL_Rect asteroidRect;
+	SDL_Rect deathstarRect;
 
 	Planet* earth;
 	Planet* mars;
+	Planet* cheesePlanet;
 	Planet* whitePlanet;
 	Planet* moon;
 	Planet* asteroid;
 	Planet* comet;
+	Planet* deathStar;
 
 	fPoint earthiPos;
 	fPoint marsiPos;
+	fPoint cheeseiPos;
 	fPoint mooniPos;
 	fPoint asteroidiPos;
 	fPoint cometiPos;
+	fPoint deathStariPos;
 
 	Fuel* fuel_1;
 

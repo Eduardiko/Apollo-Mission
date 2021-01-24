@@ -14,6 +14,7 @@ struct RectangleCollider
 		ASTEROID,
 		EARTH,
 		MARS,
+		CHEESE,
 		FUEL
 	};
 	

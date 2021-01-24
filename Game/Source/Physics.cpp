@@ -221,7 +221,7 @@ bool Physics::DetectCollision(RectangleCollider* c1, RectangleCollider* c2)
 {
 	RectangleCollider* holdC;
 
-	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS))
+	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS || c1->type == RectangleCollider::Type::CHEESE))
 	{
 		
 		holdC = c2;
@@ -264,7 +264,7 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 
 	RectangleCollider* holdC;
 
-	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS || c1->type == RectangleCollider::Type::FUEL))
+	if (c2->type == RectangleCollider::Type::SPACESHIP && (c1->type == RectangleCollider::Type::EARTH || c1->type == RectangleCollider::Type::ASTEROID || c1->type == RectangleCollider::Type::MARS || c1->type == RectangleCollider::Type::CHEESE || c1->type == RectangleCollider::Type::FUEL))
 	{
 
 		holdC = c2;
@@ -331,11 +331,35 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		}
 	}
 
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::CHEESE)
+	{
+		int x = abs(app->player->spaceship->totalForce.x);
+		int y = abs(app->player->spaceship->totalForce.y);
+		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+
+		if (app->player->hasDied == false)
+		{
+			if (currentTotalForce > 200)
+			{
+				app->player->hasDied = true;
+
+				app->audio->PlayFx(app->audio->explosionFx);
+			}
+			else if (currentTotalForce < 200 && app->player->conqueredCheese == false)
+			{
+				app->player->fuel = MAX_FUEL;
+				app->player->conqueredCheese = true;
+				app->audio->PlayFx(app->audio->radioFx);
+			}
+		}
+	}
+
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::ASTEROID)
 	{
 		LOG("Crashed with asteroid");
+		app->audio->PlayFx(app->audio->explosionFx);
 		app->player->hasDied = true;
-		//app->player->Respawn();
+		
 	}
 	
 

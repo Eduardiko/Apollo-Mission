@@ -40,12 +40,13 @@ bool Scene::Start()
 	earthRect = { 117 , 0 , 100 , 96 };
 	whitePlanetRect = { 336 , 0 , 96 , 96 };
 	marsRect = { 359 ,232, 72, 72 };
+	cheeseRect = { 0,340,200,200 };
 	moonRect = { 108 , 253,30,30 };
 	asteroidRect = { 192,253,27,27 };
+	deathstarRect = { 119,110,90,90 };
 
 	earthiPos = { 300.0f, 300.0f };
 	earth = new Planet(earthiPos, 500.0f, 200.0f);
-	
 	earth->collider = app->physics->AddRectangleCollider(84, 80, RectangleCollider::Type::EARTH);
 	planetList.Add(*earth);
 
@@ -53,6 +54,16 @@ bool Scene::Start()
 	mars = new Planet(marsiPos, 200.0f, 130.0f);
 	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::MARS);
 	planetList.Add(*mars);
+
+	cheeseiPos = { 970.0f, 1.0f };
+	cheesePlanet = new Planet(cheeseiPos, 600.0f, 280.0f);
+	cheesePlanet->collider = app->physics->AddRectangleCollider(190, 190, RectangleCollider::Type::CHEESE);
+	planetList.Add(*cheesePlanet);
+
+	deathStariPos = { 970.0f, 1.0f };
+	deathStar = new Planet(deathStariPos, 100.0f, 100.0f);
+	deathStar->collider = app->physics->AddRectangleCollider(94, 80, RectangleCollider::Type::ASTEROID);
+	planetList.Add(*deathStar);
 
 	mooniPos = { 300.0f,300.0f };
 	moon = new Planet(mooniPos, 20.0f, 1.0f);
@@ -114,13 +125,16 @@ bool Scene::Update(float dt)
 
 	moon->position = CircularMotion(earth->collider->center.x, earth->collider->center.y, earth->atmosphereRadius, 0.2f, moon, dt);
 	asteroid->position = CircularMotion(mars->collider->center.x, mars->collider->center.y, mars->atmosphereRadius, 1.0f, asteroid, dt);
+	deathStar->position = CircularMotion(cheesePlanet->collider->center.x, cheesePlanet->collider->center.y, cheesePlanet->atmosphereRadius, 0.10f, deathStar, dt);
 
 	comet->position = CometMotion(comet->position.x, comet->position.y, 1.0f);
 	RespawnComet();
 
 	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
 	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
+	cheesePlanet->collider->SetColliderPos(cheesePlanet->position, 6.0f, 6.0f);
 	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
+	deathStar->collider->SetColliderPos(deathStar->position, 2.0f, 2.0f);
 	asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
 	comet->collider->SetColliderPos(comet->position, 2.0f, 65.0f);
 
@@ -149,8 +163,11 @@ bool Scene::PostUpdate()
 
 	app->render->DrawTexture(planetsTex, earth->position.x, earth->position.x, &earthRect);
 	app->render->DrawTexture(planetsTex, mars->position.x, mars->position.y, &marsRect);
+	app->render->DrawTexture(planetsTex, cheesePlanet->position.x, cheesePlanet->position.y, &cheeseRect);
 	app->render->DrawTexture(planetsTex, moon->position.x, moon->position.y, &moonRect);
 	app->render->DrawTexture(planetsTex, asteroid->position.x, asteroid->position.y, &asteroidRect);
+	app->render->DrawTexture(planetsTex, deathStar->position.x, deathStar->position.y, &deathstarRect);
+	
 
 	rect = cometAnim->GetCurrentFrame();
 	app->render->DrawTexture(planetsTex, comet->position.x, comet->position.y, &rect);

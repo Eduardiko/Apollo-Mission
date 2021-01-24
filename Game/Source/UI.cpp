@@ -117,7 +117,7 @@ bool UI::Update(float dt)
 	else
 		spacebarAnim = &turnOff;
 
-	if ((app->player->conquredEarth || app->player->conqueredMars) && !app->player->won)
+	if ((app->player->conquredEarth || app->player->conqueredMars || app->player->conqueredCheese) && !app->player->won)
 	{
 		conqueredAnim = &conquered;
 		conqueredAnim->Update(dt);
