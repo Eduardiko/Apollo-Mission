@@ -40,7 +40,7 @@ bool Scene::Start()
 	earthRect = { 117 , 0 , 100 , 96 };
 	whitePlanetRect = { 336 , 0 , 96 , 96 };
 	marsRect = { 359 ,232, 72, 72 };
-	cheeseRect = { 0,340,200,200 };
+	cheeseRect = { 0,339,218,218 };
 	moonRect = { 108 , 253,30,30 };
 	asteroidRect = { 192,253,27,27 };
 	deathstarRect = { 119,110,90,90 };
@@ -55,9 +55,9 @@ bool Scene::Start()
 	mars->collider = app->physics->AddRectangleCollider(60, 60, RectangleCollider::Type::MARS);
 	planetList.Add(*mars);
 
-	cheeseiPos = { 970.0f, 1.0f };
+	cheeseiPos = { 1040.0f, -40.0f };
 	cheesePlanet = new Planet(cheeseiPos, 7500.0f, 280.0f, 0.0f);
-	cheesePlanet->collider = app->physics->AddRectangleCollider(190, 190, RectangleCollider::Type::CHEESE);
+	cheesePlanet->collider = app->physics->AddRectangleCollider(182, 181, RectangleCollider::Type::CHEESE);
 	planetList.Add(*cheesePlanet);
 
 	deathStariPos = { 970.0f, 1.0f };
@@ -133,7 +133,7 @@ bool Scene::Update(float dt)
 
 	earth->collider->SetColliderPos(earth->position, 8.0f, 8.0f);
 	mars->collider->SetColliderPos(mars->position, 6.0f, 6.0f);
-	cheesePlanet->collider->SetColliderPos(cheesePlanet->position, 6.0f, 6.0f);
+	cheesePlanet->collider->SetColliderPos(cheesePlanet->position, 18.0f, 18.0f);
 	moon->collider->SetColliderPos(moon->position, 2.0f, 2.0f);
 	deathStar->collider->SetColliderPos(deathStar->position, 2.0f, 2.0f);
 	asteroid->collider->SetColliderPos(asteroid->position, 2.0f, 2.0f);
