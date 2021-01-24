@@ -6,6 +6,7 @@
 #include "Point.h"
 #include "Math.h"
 #include "UI.h"
+#include "Audio.h"
 
 #include "Log.h"
 
@@ -144,6 +145,7 @@ bool Physics::Update(float dt)
 
 bool Physics::PostUpdate()
 {
+	
 
 	// Remove all colliders scheduled for deletion
 	for (uint i = 0; i < 50; ++i)
@@ -280,15 +282,53 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		app->ui->fuelIconAnim = &app->ui->turnOff;
 		return;
 	}
-	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::EARTH && app->player->conquredEarth ==false)
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::EARTH )
 	{
-		app->player->fuel = MAX_FUEL;
-		app->player->conquredEarth = true;
+		
+
+		int x=abs(app->player->spaceship->totalForce.x);
+		int y=abs(app->player->spaceship->totalForce.y);
+		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+
+		if (app->player->hasDied == false)
+		{
+			if (currentTotalForce > 200)
+			{
+				app->player->hasDied = true;
+				
+				app->audio->PlayFx(app->audio->explosionFx);
+			}
+			else if(currentTotalForce <200 && app->player->conquredEarth == false)
+			{
+				app->player->fuel = MAX_FUEL;
+				app->player->conquredEarth = true;
+				app->audio->PlayFx(app->audio->radioFx);
+			}
+		}
+
+		
 	}
-	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::MARS && app->player->conqueredMars ==false)
+	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::MARS )
 	{
-		app->player->fuel = MAX_FUEL;
-		app->player->conqueredMars = true;
+		int x = abs(app->player->spaceship->totalForce.x);
+		int y = abs(app->player->spaceship->totalForce.y);
+		float currentTotalForce = sqrt(x ^ 2 + y ^ 2);
+
+		if (app->player->hasDied == false)
+		{
+			if (currentTotalForce > 200)
+			{
+				app->player->hasDied = true;
+
+				app->audio->PlayFx(app->audio->explosionFx);
+			}
+			else if (currentTotalForce < 200 && app->player->conqueredMars == false)
+			{
+				app->player->fuel = MAX_FUEL;
+				app->player->conqueredMars = true;
+				app->audio->PlayFx(app->audio->radioFx);
+			}
+		}
 	}
 
 	if (c1->type == RectangleCollider::Type::SPACESHIP && c2->type == RectangleCollider::Type::ASTEROID)
