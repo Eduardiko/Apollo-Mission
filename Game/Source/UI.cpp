@@ -73,8 +73,8 @@ bool UI::Start()
 	spacebar.PushBack({ 0,585,258,135 });
 	spacebar.PushBack({ 0,720,258,135 });
 
-	gameOver.PushBack({ 520,0,350,90 });
-	gameOver.PushBack({ 520,90,350,90 });
+	gameOver.PushBack({ 520,0,350,180 });
+	gameOver.PushBack({ 520,180,350,180 });
 	gameOverAnim = &turnOff;
 
 	hearth_1 = { 32,866,260,45 };
@@ -108,10 +108,17 @@ bool UI::Update(float dt)
 		gameOverAnim = &gameOver;
 		spacebarAnim->Update(dt);
 		SDL_Rect rect = gameOverAnim->GetCurrentFrame();
-		app->render->DrawTexture(uiTex, 427 + 20, 250, &rect, 1.0f);
+		app->render->DrawTexture(uiTex, 417, 250, &rect, 1.0f);
 
-		app->player->ResetAll(app->player->spaceship);
+		spacebarAnim->Update(dt);
+		rect = spacebarAnim->GetCurrentFrame();
+		app->render->DrawTexture(uiTex, 427 + 25, 365, &rect, 1.0f);
+
+
+
 	}
+	else
+		gameOverAnim = &turnOff;
 
 	app->render->DrawTexture(uiTex, 0, 0, &_interface, 0.0f);
 	switch (app->player->spaceship->health)
@@ -197,9 +204,14 @@ bool UI::Update(float dt)
 	rect = fuelIconAnim->GetCurrentFrame();
 	app->render->DrawTexture(uiTex, app->scene->fuel_1->position.x, app->scene->fuel_1->position.y, &rect, 1.0f);
 
-	spacebarAnim->Update(dt);
-	rect = spacebarAnim->GetCurrentFrame();
-	app->render->DrawTexture(uiTex,427 + 20,250, &rect, 1.0f);
+	if (app->scene->gameIsOver == false)
+	{
+		spacebarAnim->Update(dt);
+		rect = spacebarAnim->GetCurrentFrame();
+		app->render->DrawTexture(uiTex, 427 + 20, 250, &rect, 1.0f);
+
+	}
+	
 
 	if (app->player->won)
 	{

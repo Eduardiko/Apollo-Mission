@@ -97,7 +97,10 @@ bool Player::PreUpdate()
 bool Player::Update(float dt)
 {
 	
-	if (won && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) ResetAll(spaceship);
+	if (spaceship->health <= 0)
+		app->scene->gameIsOver = true;
+
+	if ( (won  || app->scene->gameIsOver)  && app->input->GetKey(SDL_SCANCODE_SPACE == KEY_DOWN)) ResetAll(spaceship);
 
 	if (fuel <= 0 && !hasDied)
 	{
@@ -342,4 +345,6 @@ void Player::ResetAll(Spaceship* s)
 	spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
 	app->scene->fuel_1->collider = app->physics->AddRectangleCollider(40, 40, RectangleCollider::Type::FUEL);
 	app->scene->fuel_1->collider->SetColliderPos({ 700,300 }, 0, 0);
+
+	app->scene->gameIsOver = false;
 }
