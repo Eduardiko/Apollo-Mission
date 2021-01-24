@@ -44,6 +44,8 @@ bool Player::Start()
 	spaceshipRect = { 0,0,17,43 };
 
 	spaceship = new Spaceship(playerPos, 10.0f, 3, 100.0f,0.0f);
+	spaceship->totalForce = { 0.0f, 0.0f };
+	spaceship->velocity = { 0.0f, 0.0f };
 	spaceship->collider = app->physics->AddRectangleCollider(25, 25, RectangleCollider::Type::SPACESHIP);
 	spaceship->collider->SetColliderPos(spaceship->position, 0.0f, 0.0f);
 	spaceship->rotation = 0.0f;
