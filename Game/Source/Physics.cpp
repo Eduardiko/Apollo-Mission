@@ -300,7 +300,6 @@ void Physics::SolveCollision(RectangleCollider* c1, RectangleCollider* c2)
 		app->player->fuel = MAX_FUEL;
 		app->ui->fuelIconAnim = &app->ui->turnOff;
 		app->audio->PlayFx(app->audio->fuelFx);
-		app->player->spaceship->health++;
 
 		return;
 	}
