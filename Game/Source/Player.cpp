@@ -96,7 +96,12 @@ bool Player::Update(float dt)
 {
 	
 	if (fuel <= 0)
+	{
 		outOfFuel = true;
+		fuel = MAX_FUEL;
+		spaceship->health--;
+	}
+		
 
 	if (hasDied )
 	{

@@ -74,8 +74,8 @@ bool UI::Start()
 	spacebar.PushBack({ 0,720,258,135 });
 
 	hearth_1 = { 32,866,260,45 };
-	hearth_2 = { 32,912,120,45 };
-	hearth_3 = { 32,958,183,45 };
+	hearth_2 = { 32,912,260,45 };
+	hearth_3 = { 32,958,260,45 };
 	hearth_4 = { 32,1004,260,45 };
 
 	popUpAnim = &popUp;
@@ -96,7 +96,7 @@ bool UI::PreUpdate()
 
 bool UI::Update(float dt)
 {
-	switch (app->player->lives)
+	switch (app->player->spaceship->health)
 	{
 	case(1):
 	{
@@ -137,13 +137,13 @@ bool UI::Update(float dt)
 		}
 	}
 
-	if (app->player->hasDied || app->player->outOfFuel)
+	if (app->player->hasDied || app->player->outOfFuel && app->player->spaceship->health==1)
 	{
 		spacebarAnim = &spacebar;
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
-			app->player->Respawn();
+			app->player->Respawn(app->player->spaceship);
 		}
 	}
 	else
